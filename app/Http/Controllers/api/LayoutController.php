@@ -57,7 +57,7 @@ class LayoutController extends Controller
         $token = $user->createToken('main')->plainTextToken;
         DB::commit();
 
-        return response()->json(['statue'=>200,'message'=>'تمت إضافة طالب بنجاح','student'=>$student->load('user','year.university'),'tohken'=>$token]);
+        return response()->json(['statue'=>200,'message'=>'تمت إضافة طالب بنجاح','student'=>$student->load('year.university'),'tohken'=>$token,'user'=>$student->user]);
 
     }
     public function homepage(Request $request)
@@ -278,7 +278,6 @@ class LayoutController extends Controller
         $valdata = $request->validate([
             'id' => 'required|integer',
             'name' => 'required|integer',
-            'phone' => 'required|string|exists:users,phone',
             'year_id' => 'required|integer',
             'gender' => 'required|integer',
         ]);
@@ -291,7 +290,6 @@ class LayoutController extends Controller
             'is_banned' => $request->input('is_banned') || false,
         ]);
         $student->user->update([
-            'phone' =>$request->input('phone') ,
             'gender' =>$request->input('gender') ,
         ]);
         DB::commit();

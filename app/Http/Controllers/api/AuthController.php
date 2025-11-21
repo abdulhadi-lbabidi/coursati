@@ -25,7 +25,7 @@ class AuthController extends Controller
         $data =Admin::findOrFail($user->userable_id);
         // return response(compact('user','token'));
         $data->load('user');
-        return response()->json(['admin'=> $data,'token'=>$token]);
+        return response()->json(['admin'=> $data,'token'=>$token,'user'=>$user]);
     }
         public function loginstudent(LoginRequest $request){
         $credentils = $request->validated();
@@ -41,7 +41,7 @@ class AuthController extends Controller
         $data =Student::findOrFail($user->userable_id);
         // return response(compact('user','token'));
         $data->load('user','year.university');
-        return response()->json(['student'=> $data, 'token' => $token]);
+        return response()->json(['student'=> $data, 'token' => $token,'user'=>$user]);
     }
 
 
@@ -59,7 +59,7 @@ class AuthController extends Controller
         // return response(compact('user','token'));
         $data->load('user');
 
-        return response()->json(['teacher'=> $data,'token'=>$token]);
+        return response()->json(['teacher'=> $data,'token'=>$token,'user'=>$user]);
     }
     public function logout(Request $request){
         /** @var \App\Models\User $user */
