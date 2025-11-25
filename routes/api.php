@@ -16,6 +16,7 @@ use App\Http\Controllers\api\UniversityController;
 use App\Http\Controllers\api\VideoController;
 use App\Http\Controllers\api\YearController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -53,7 +54,7 @@ Route::get('/student/mysubjects',[LayoutController::class,'getstudentsubjects'])
 Route::post('/student/add/subject',[LayoutController::class,'addstudentsubject']);
 Route::delete('/student/delete/subject',[LayoutController::class,'deletestudentsubject']);
 Route::get('/student/subjects',[LayoutController::class,'getsubjects']);
-Route::get('/student/courses',[LayoutController::class,'getcourse']);
+Route::get('/student/subjectcourses',[LayoutController::class,'getcoursefromsubject']);
 Route::get('/student/yearcourses',[LayoutController::class,'getcoursefromyear']);
 Route::get('/student/teachercourses',[LayoutController::class,'getcoursefromteacher']);
 Route::get('/student/lecturevideofiles',[LayoutController::class,'getlecvideoswithfiles']);
@@ -77,3 +78,9 @@ Route::get('/data/admin/home',[AdminController::class,'mainlayout']);
 Route::post('/data/admin/note',[TeacherNoteController::class,'adminstore']);
 Route::put('/data/admin/note/{id}',[TeacherNoteController::class,'statue']);
 Route::delete('/data/admin/note/{id}',[TeacherNoteController::class,'deletenote']);
+
+
+Route::get('/migrate-and-seed', function () {
+    Artisan::call('migrate:fresh --seed');
+    return response()->json(['message' => 'Database migrated and seeded successfully!']);
+});

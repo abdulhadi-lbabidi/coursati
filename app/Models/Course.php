@@ -31,7 +31,7 @@ class Course extends Model
     ];
     public function subject()
     {
-        return $this->belongsTo( Subject::class)->where('is_deleted', '0');
+        return $this->belongsTo( Subject::class);
     }
     public function teacher()
     {

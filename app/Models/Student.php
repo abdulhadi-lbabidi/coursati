@@ -29,10 +29,7 @@ class Student extends Model
     {
         return $this->belongsTo( Year::class);
     }
-    public function subscribtions()
-    {
-        return $this->belongsToMany(Subscription::class, 'student_subscriptions', 'student_id', 'subscription_id')->withPivotValue('subscription_price');
-    }
+
     public function rates()
     {
         return $this->hasMany(CourseRate::class);

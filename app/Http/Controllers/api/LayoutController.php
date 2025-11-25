@@ -68,7 +68,7 @@ class LayoutController extends Controller
         $university = University::findOrFail($valdata['university_id']);
         $salespoint = SalesPoint::where('university_id', '=', $university->id)->get();
 
-        $freecourses = Course::where('is_free', 1)->where('is_deleted','=',false)->inRandomOrder()->limit(10)->withAvg('rates', 'stars')->with(['subject.season.year', 'teacher'])->get();
+        $freecourses = Course::where('is_pending', 1)->where('is_deleted','=',false)->where('price','=',0)->inRandomOrder()->limit(10)->withAvg('rates', 'stars')->with(['subject.season.year', 'teacher'])->get();
         $recentcourses = Course::latest('created_at')->where('is_deleted','=', false)->with(['subject.season.year', 'teacher'])->withAvg('rates', 'stars')->take(5)->get();
         $mostvisited = Course::where('is_deleted','=',false)->with(['subject.season.year', 'teacher'])->withAvg('rates', 'stars')->limit(10)->get();
         return response()->json(['university' => $university, 'free_courses' => $freecourses, 'sales_points' => $salespoint, 'recently_added_courses' => $recentcourses, 'most_visited_courses' => $mostvisited]);
@@ -82,13 +82,18 @@ class LayoutController extends Controller
 
         return response()->json(['years' => $university->years]);
     }
+
     public function coursedetails(Request $request)
     {
         $valdata = $request->validate([
             'cousre_id' => 'required|integer',
+            'student_id' => 'required|integer',
         ]);
-        $course = Course::findOrFail($valdata['cousre_id']);
-        return response()->json(['course' => $course, 'subject' => $course->subject, 'season' => $course->subject->season, 'teacher' => $course->teacher->name, 'year' => $course->subject->season->year->name, 'lecture_counts' => $course->lectures()->count(), 'lecture_video_counts' => $course->videos()->count(), 'course_rate' => $course->rates()->sum('stars')]);
+        $course = Course::findOrFail($valdata['cousre_id'])->load('subject.season.year');
+        $student = Student::findOrFail($valdata['student_id']);
+        $rated = $student->rates->where('cousre_id','=',$course->id);
+        $faivorit = $student->favorits->where('teacher_id','=',$course->teacher->id);
+        return response()->json(['course' => $course, 'course_rate' => $course->rates()->sum('stars'),'faviorit'=>$faivorit,'rated'=>$rated]);
     }
 
     public function getteachers(Request $request)
@@ -171,7 +176,7 @@ class LayoutController extends Controller
 
         return response()->json(['year' => $university->years->load('seasons.subjects')]);
     }
-    public function getcourse(Request $request)
+    public function getcoursefromsubject(Request $request)
     {
 
         $valdata = $request->validate([
@@ -184,7 +189,7 @@ class LayoutController extends Controller
                     $query->where('is_deleted', 0);
             });
         })->withAvg('rates', 'stars')
-        ->with('subject.season.year','activesubscriptions') // eager load for access
+        ->with('subject.season.year') // eager load for access
         ->get();
 
         return response()->json(['courses' => $courses]);
@@ -195,17 +200,18 @@ class LayoutController extends Controller
         $valdata = $request->validate([
             'teacher_id' => 'required|integer',
         ]);
-        $courses = Course::where('is_deleted', 0)
-            ->whereHas('subject.season', function ($query) {
-            $query->where('is_deleted', 0)
-            ->whereHas('year', function ($query) {
-                    $query->where('is_deleted', 0);
-            });
-        })->withAvg('rates', 'stars')
-        ->with('subject.season.year','activesubscriptions') // eager load for access
-        ->get();
+        $teacher = Teacher::findOrFail($valdata['teacher_id']);
+        // $courses = Course::where('is_deleted', 0)
+        //     ->whereHas('subject.season', function ($query) {
+        //     $query->where('is_deleted', 0)
+        //     ->whereHas('year', function ($query) {
+        //             $query->where('is_deleted', 0);
+        //     });
+        // })->withAvg('rates', 'stars')
+        // ->with('subject.season.year') // eager load for access
+        // ->get();
 
-        return response()->json(['courses' => $courses]);
+        return response()->json(['courses' => $teacher->courses->load('subject.season.year','teacher')]);
     }
     public function getcoursefromyear(Request $request)
     {
@@ -213,8 +219,8 @@ class LayoutController extends Controller
         $valdata = $request->validate([
             'year_id' => 'required|integer',
         ]);
-        $year = Year::findOrFail($valdata['year_id'])->get();
-        $aa=$year->load('subjects.courses');
+        $year = Year::findOrFail($valdata['year_id']);
+        $aa=$year->withAvg('subjects.courses.rates', 'stars')->load('subjects.courses');
         $courses = Course::where('is_deleted', 0)
             ->whereHas('subject.season', function ($query) {
             $query->where('is_deleted', 0)
@@ -222,7 +228,7 @@ class LayoutController extends Controller
                     $query->where('is_deleted', 0);
             });
         })->withAvg('rates', 'stars')
-        ->with('subject.season.year','activesubscriptions') // eager load for access
+        ->with('subject.season.year') // eager load for access
         ->get();
 
         return response()->json(['courses' => $courses,'$year'=>$aa]);
