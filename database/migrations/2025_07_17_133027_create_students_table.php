@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('year_id')->references('id')->on('years')->onDelete('cascade');
-            $table->boolean('is_banned')->default(false);
+            $table->boolean('is_banned')->default(0);
             $table->timestamps();
         });
     }

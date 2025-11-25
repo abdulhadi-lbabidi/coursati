@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-
+use App\Models\Contactinfo;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -51,8 +51,7 @@ class DatabaseSeeder extends Seeder
             AppUpdateSeeder::class,]);
         $this->call([
             StudentSubjectsSeeder::class,]);
-        // $this->call([
-        //     NotificationSeeder::class,]);
+        Contactinfo::factory()->count(1)->create();
 
     }
 

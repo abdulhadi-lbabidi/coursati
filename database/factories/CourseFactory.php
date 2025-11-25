@@ -27,7 +27,6 @@ class CourseFactory extends Factory
             'course_tag_name'=>fake()->name(),
             'free_course_description'=>fake()->text(),
             'free_course_image'=>fake()->url(),
-            'course_image'=>fake()->imageUrl(),
             'lectures_number'=>fake()->numberBetween(1,10),
             'total_videos_duration'=>fake()->numberBetween(1,20),
             'price'=>fake()->numberBetween(10,20),

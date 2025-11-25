@@ -44,7 +44,7 @@ class LayoutController extends Controller
         $student = Student::create([
             'name' => $request->input('name'),
             'year_id' => $request->input('year_id'),
-            'is_banned' => $request->input('is_banned') || false,
+            'is_banned' => $request->input('is_banned') || 0,
         ]);
         $year = Year::findOrFail($request->input('year_id'));
         $subjects = $year->subjectsync();
@@ -57,7 +57,7 @@ class LayoutController extends Controller
         $token = $user->createToken('main')->plainTextToken;
         DB::commit();
 
-        return response()->json(['statue'=>200,'message'=>'تمت إضافة طالب بنجاح','student'=>$student->load('year.university'),'tohken'=>$token,'user'=>$student->user]);
+        return response()->json(['statue'=>200,'message'=>'تمت إضافة طالب بنجاح','student'=>$student->load('year.university'),'token'=>$token,'user'=>$student->user]);
 
     }
     public function homepage(Request $request)
@@ -89,11 +89,11 @@ class LayoutController extends Controller
             'cousre_id' => 'required|integer',
             'student_id' => 'required|integer',
         ]);
-        $course = Course::findOrFail($valdata['cousre_id'])->load('subject.season.year');
+        $course = Course::findOrFail($valdata['cousre_id'])->load('subject.season.year','year');
         $student = Student::findOrFail($valdata['student_id']);
         $rated = $student->rates->where('cousre_id','=',$course->id);
         $faivorit = $student->favorits->where('teacher_id','=',$course->teacher->id);
-        return response()->json(['course' => $course, 'course_rate' => $course->rates()->sum('stars'),'faviorit'=>$faivorit,'rated'=>$rated]);
+        return response()->json(['course' => $course, 'course_rate' => $course->rates()->sum('stars'),'faviorit'=>$faivorit,'rated'=>$rated,'video_count'=>$course->videos()->count(),'lectures'=>$course->lectures]);
     }
 
     public function getteachers(Request $request)
@@ -146,8 +146,8 @@ class LayoutController extends Controller
             'student_id' => 'required|integer',
         ]);
         $student = Student::findOrFail($valdata['student_id']);
-
-        return response()->json(['year' => $student->year->load('seasons.subjects')]);
+        $seasons = $student->year->seasons;
+        return response()->json(['year' => $student->year->load('seasons.subjects'),'seasons'=>$seasons]);
     }
     public function addstudentsubject(Request $request)
     {
@@ -173,8 +173,8 @@ class LayoutController extends Controller
             'university_id' => 'required|integer',
         ]);
         $university = University::findOrFail($valdata['university_id']);
-
-        return response()->json(['year' => $university->years->load('seasons.subjects')]);
+        $years = $university->years->load('seasons');
+        return response()->json(['year' => $university->years->load('seasons.subjects'),'seasons'=>$years]);
     }
     public function getcoursefromsubject(Request $request)
     {

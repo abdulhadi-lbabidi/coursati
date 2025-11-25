@@ -20,7 +20,6 @@ class Course extends Model
         'course_tag_name',
         'free_course_description',
         'free_course_image',
-        'course_image',
         'lectures_number',
         'total_videos_duration',
         'price',

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('course_tag_name');
             $table->text('free_course_description')->nullable();
             $table->text('free_course_image')->nullable();
-            $table->text('course_image')->nullable();
             $table->integer('lectures_number');
             $table->float('total_videos_duration');
             $table->text('telegram_url');

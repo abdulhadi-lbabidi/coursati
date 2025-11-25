@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('seasons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('season_num');
             $table->integer('number');
             $table->foreignId('year_id')->references('id')->on('years')->onDelete('cascade');
             $table->boolean('is_deleted')->default(false);
