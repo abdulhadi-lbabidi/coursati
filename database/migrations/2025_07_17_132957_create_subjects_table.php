@@ -13,19 +13,21 @@ return new class extends Migration
     {
         Schema::create('seasons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('year_id')->references('id')->on('years')->onDelete('cascade');
             $table->string('name');
             $table->integer('season_num');
+            $table->integer('number');
+            $table->foreignId('year_id')->references('id')->on('years')->onDelete('cascade');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('season_id')->references('id')->on('seasons')->onDelete('cascade');;
             $table->string('name');
-            $table->string('tagname');
+            $table->string('doctor_name');
+            $table->string('subject_tag_name');
             $table->enum('subject_nature',['writen','automation']);
             $table->boolean('is_deleted')->default(false);
+            $table->foreignId('season_id')->references('id')->on('seasons')->onDelete('cascade');;
             $table->timestamps();
         });
 

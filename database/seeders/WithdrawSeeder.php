@@ -2,19 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\StudentSubscription;
-use App\Models\Subscription;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SubscriptionSeeder extends Seeder
+class WithdrawSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Subscription::factory()->count(30)->create();
-        StudentSubscription::factory()->count(30)->create();
+        //
     }
 }

@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lecture_id')->references('id')->on('lectures')->onDelete('cascade');
-            $table->string('desc');
             $table->string('name');
-            $table->unsignedBigInteger('views');
+            $table->string('desc');
             $table->text('video_url');
+            $table->unsignedBigInteger('views');
             $table->boolean('is_free')->default(false);
+            $table->string('video_tag_name');
+            $table->integer('number');
+            $table->foreignId('lecture_id')->references('id')->on('lectures')->onDelete('cascade');
             $table->timestamps();
         });
 

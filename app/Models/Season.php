@@ -13,6 +13,7 @@ class Season extends Model
         protected $fillable = [
         'name',
         'season_num',
+        'number',
         'year_id',
         'is_deleted'
     ];

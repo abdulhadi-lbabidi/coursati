@@ -15,11 +15,13 @@ class UniversitySeeder extends Seeder
      */
     public function run(): void
     {
+        $number = 0;
         University::factory()->create([
             'collagename' => 'جامعة حلب',
-        ])->each(function ($university) {
+        ])->each(function ($university) use ($number) {
             // For each university, create 5 years
             $tempname = 'السنة الأولى';
+            $number++;
             for ($yearNum = 1; $yearNum <= 5; $yearNum++) {
                 switch ($yearNum) {
                     case 1:
@@ -53,6 +55,7 @@ class UniversitySeeder extends Seeder
                     Season::factory()->create([
                         'year_id' => $year->id,
                         'season_num' => $seasonNum,
+                        'number' => $seasonNum,
                         'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
                     ]);
                 }
@@ -60,7 +63,7 @@ class UniversitySeeder extends Seeder
         });
         University::factory()->create([
             'collagename' => 'جامعة حمص',
-        ])->each(function ($university) {
+        ])->each(function ($university) use ($number) {
             // For each university, create 5 years
             $tempname = 'السنة الأولى';
             for ($yearNum = 1; $yearNum <= 5; $yearNum++) {
@@ -96,6 +99,7 @@ class UniversitySeeder extends Seeder
                     Season::factory()->create([
                         'year_id' => $year->id,
                         'season_num' => $seasonNum,
+                        'number' => $number,
                         'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
                     ]);
                 }
@@ -103,9 +107,10 @@ class UniversitySeeder extends Seeder
         });
         University::factory()->create([
             'collagename' => 'جامعة دمشق',
-        ])->each(function ($university) {
+        ])->each(function ($university) use ($number) {
             // For each university, create 5 years
             $tempname = 'السنة الأولى';
+            $number++;
             for ($yearNum = 1; $yearNum <= 5; $yearNum++) {
                 switch ($yearNum) {
                     case 1:
@@ -139,6 +144,7 @@ class UniversitySeeder extends Seeder
                     Season::factory()->create([
                         'year_id' => $year->id,
                         'season_num' => $seasonNum,
+                        'number' => $number,
                         'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
                     ]);
                 }

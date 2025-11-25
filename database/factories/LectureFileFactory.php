@@ -21,6 +21,7 @@ class LectureFileFactory extends Factory
             'name'=>fake()->name(),
             'file_url'=>fake()->url(),
             'size'=>fake()->randomFloat(2,1,15),
+            'number'=>fake()->randomNumber(1,10),
             'lecture_id'=>Lecture::all()->random()->id,
         ];
     }

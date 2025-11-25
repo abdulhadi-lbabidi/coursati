@@ -15,9 +15,9 @@ class CodeGroup extends Model
         'code',
     ];
 
-    public function subscription()
+    public function course()
     {
-        return $this->belongsTo( Subscription::class);
+        return $this->belongsTo( Course::class);
     }
     public function codes()
     {

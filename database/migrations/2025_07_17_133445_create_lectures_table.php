@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->references('id')->on('courses')->onDelete('cascade');;
             $table->string('name');
+            $table->integer('number');
+            $table->string('lecture_tag_name');
             $table->text('desc');
             $table->timestamps();
         });
@@ -23,6 +25,7 @@ return new class extends Migration
             $table->foreignId('lecture_id')->references('id')->on('lectures')->onDelete('cascade');
             $table->string('name');
             $table->float('size');
+            $table->integer('number');
             $table->text('file_url');
             $table->timestamps();
         });

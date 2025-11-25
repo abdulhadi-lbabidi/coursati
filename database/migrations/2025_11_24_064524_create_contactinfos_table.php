@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('code_groups', function (Blueprint $table) {
+        Schema::create('contactinfos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->references('id')->on('courses')->onDelete('cascade');
-            $table->integer('price');
-            $table->float('persentage');
+            $table->string('phone');
+            $table->string('email');
+            $table->text('insta_url');
+            $table->text('facebook_url');
+            $table->text('telegram_url');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('code_groups');
+        Schema::dropIfExists('contactinfos');
     }
 };

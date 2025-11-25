@@ -12,8 +12,20 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'is_free',
         'is_deleted',
+        'is_pending',
+        'courese_type',
+        'name',
+        'desc',
+        'course_tag_name',
+        'free_course_description',
+        'free_course_image',
+        'course_image',
+        'lectures_number',
+        'total_videos_duration',
+        'price',
+        'enddate',
+        'telegram_url',
         'teacher_id',
         'subject_id',
     ];
@@ -35,10 +47,6 @@ class Course extends Model
     {
         return $this->hasMany(Lecture::class);
     }
-    public function activesubscriptions()
-    {
-        return $this->hasMany(Subscription::class,'cource_id')->where('is_pending', '0')->whereDate('enddate', '>', Carbon::today());
-    }
     public function videos()
     {
         return $this->hasManyThrough(Video::class, Lecture::class);
@@ -47,5 +55,10 @@ class Course extends Model
     public function rates()
     {
         return $this->hasMany(CourseRate::class);
+    }
+
+        public function students()
+    {
+        return $this->belongsToMany(Student::class, 'student_courses', 'course_id', 'student_id')->withPivotValue('subscription_price');
     }
 }

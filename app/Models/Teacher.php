@@ -14,6 +14,10 @@ class Teacher extends Model
         'name',
         'telegram_url',
         'description',
+        'is_pending',
+        'gender',
+        'image_url',
+        'persentage',
         'is_deleted',
         'university_id',
     ];
@@ -24,6 +28,10 @@ class Teacher extends Model
     }
 
     public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
+    public function withdraws()
     {
         return $this->hasMany(Course::class);
     }

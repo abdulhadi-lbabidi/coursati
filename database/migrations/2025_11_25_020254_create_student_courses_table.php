@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('code_groups', function (Blueprint $table) {
+        Schema::create('student_courses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->references('id')->on('courses')->onDelete('cascade');
-            $table->integer('price');
+            $table->foreignId('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->integer('subscription_price');
             $table->float('persentage');
             $table->timestamps();
         });
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('code_groups');
+        Schema::dropIfExists('student_courses');
     }
 };

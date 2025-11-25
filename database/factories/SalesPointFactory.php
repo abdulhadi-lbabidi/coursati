@@ -18,11 +18,13 @@ class SalesPointFactory extends Factory
     public function definition(): array
     {
         return [
-            'phone'=>fake()->phoneNumber,
             'name'=>fake()->name,
+            'phone'=>fake()->phoneNumber,
             'address'=>fake()->address,
+            'description'=>fake()->text(),
             'lat'=>fake()->randomFloat(10,0,16),
             'lng'=>fake()->randomFloat(10,0,16),
+            'image_url'=>fake()->imageUrl(),
             'university_id'=>University::all()->random()->id,
         ];
     }

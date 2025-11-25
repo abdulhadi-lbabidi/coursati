@@ -17,6 +17,7 @@ class SalesPoint extends Model
         'description',
         'lat',
         'lng',
+        'image_url',
         'university_id',
     ];
 

@@ -21,9 +21,11 @@ class VideoFactory extends Factory
             'name'=>fake()->name,
             'desc'=>fake()->text,
             'video_url'=>fake()->url,
-            'lecture_id'=>Lecture::all()->random()->id,
             'views'=>fake()->numberBetween(10,5000),
             'is_free'=>fake()->boolean,
+            'video_tag_name'=>fake()->name,
+            'number'=>fake()->randomNumber(1,10),
+            'lecture_id'=>Lecture::all()->random()->id,
         ];
     }
 }

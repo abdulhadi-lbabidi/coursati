@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('sales_points', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('university_id')->references('id')->on('universities')->onDelete('cascade');;
             $table->string('name');
             $table->string('phone');
             $table->string('address');
             $table->string('description')->nullable();
             $table->float('lat');
             $table->float('lng');
+            $table->text('image_url')->nullable();
+            $table->foreignId('university_id')->references('id')->on('universities')->onDelete('cascade');;
             $table->timestamps();
         });
     }

@@ -20,7 +20,8 @@ class SubjectFactory extends Factory
     {
         return [
             'name'=>fake()->name,
-            'tagname'=>fake()->name,
+            'doctor_name'=>fake()->name,
+            'subject_tag_name'=>fake()->name,
             'subject_nature'=>fake()->randomElement(['writen','automation']),
             'is_deleted'=>fake()->boolean,
             'season_id'=>Season::all()->random()->id,

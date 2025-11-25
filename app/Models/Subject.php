@@ -12,7 +12,8 @@ class Subject extends Model
 
     protected $fillable = [
         'name',
-        'tagname',
+        'doctor_name',
+        'subject_tag_name',
         'subject_nature',
         'is_deleted',
         'season_id',

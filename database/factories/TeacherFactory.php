@@ -19,8 +19,12 @@ class TeacherFactory extends Factory
     {
         return [
             'name'=>fake()->name,
-            'telegram_url'=>fake()->url,
             'description'=>fake()->text(),
+            'is_pending'=>fake()->boolean(),
+            'gender'=>fake()->randomElement(['ذكر','أنثى']),
+            'image_url'=>fake()->imageUrl(),
+            'persentage'=>fake()->randomFloat(2,0.01,0.3),
+            'telegram_url'=>fake()->url,
             'university_id'=>University::all()->random()->id,
         ];
     }

@@ -13,6 +13,7 @@ class LectureFile extends Model
         'lecture_id',
         'name',
         'size',
+        'number',
         'file_url',
     ];
     public function lecture()

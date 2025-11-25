@@ -17,6 +17,8 @@ class Video extends Model
         'views',
         'is_free',
         'lecture_id',
+        'video_tag_name',
+        'number'
     ];
     public function lecture()
     {

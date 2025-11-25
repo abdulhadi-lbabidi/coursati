@@ -19,6 +19,8 @@ class LectureFactory extends Factory
     {
         return [
             'name'=>fake()->randomElement(['المحاضرة الأولى','المحاضرة الثانية','المحاضرة الثالثة','المحاضرة الرابعة']),
+            'lecture_tag_name'=>fake()->name,
+            'number'=>fake()->numberBetween(1,10),
             'desc'=>fake()->text(300),
             'course_id'=>Course::all()->random()->id,
         ];
