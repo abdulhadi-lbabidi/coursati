@@ -193,8 +193,7 @@ class StudentLayoutController extends Controller
             'university_id' => 'required|integer',
         ]);
         $university = University::findOrFail($valdata['university_id']);
-        $seasons = Season::where('university_id','=',$university->id)->get();
-        return response()->json(['year' => $university->years->load('subjects')->get(),'seasons'=>$seasons]);
+        return response()->json(['year' => $university->years->load('subjects'),'seasons'=>$university->seasons]);
     }
 
     public function addstudentsubject(Request $request)
