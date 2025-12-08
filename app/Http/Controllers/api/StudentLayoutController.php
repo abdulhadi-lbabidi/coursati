@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Models\Code;
 use App\Models\Contactinfo;
 use App\Models\Course;
+use App\Models\CourseRate;
 use App\Models\Forwardnotification;
 use App\Models\Lecture;
 use App\Models\SalesPoint;
@@ -93,13 +94,13 @@ class StudentLayoutController extends Controller
 
         $freecourses = Course::whereHas('subject.year', function ($query) use ($university) {
             $query->where('university_id', $university->id);
-        })->where('is_pending', 1)->where('is_deleted','=',false)->where('price','=',0)->inRandomOrder()->limit(5)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
-        $recentcourses = Course::latest('created_at')->whereHas('subject.year', function ($query) use ($university) {
+        })->where('is_pending', 0)->where('is_deleted','=',false)->where('price','=',0)->inRandomOrder()->limit(5)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
+        $recentcourses = Course::latest('created_at')->where('is_pending',0)->whereHas('subject.year', function ($query) use ($university) {
             $query->where('university_id', $university->id);
         })->where('is_deleted','=', false)->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->take(5)->get();
         $mostvisited = Course::where('is_deleted','=',false)->whereHas('subject.year', function ($query) use ($university) {
             $query->where('university_id', $university->id);
-        })->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->limit(5)->get();
+        })->where('is_pending',0)->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->limit(5)->get();
         return response()->json([ 'free_courses' => $freecourses, 'sales_points' => $salespoint, 'recently_added_courses' => $recentcourses, 'most_visited_courses' => $mostvisited]);
     }
     public function freecourses(Request $request)
@@ -111,7 +112,7 @@ class StudentLayoutController extends Controller
 
         $freecourses = Course::whereHas('subject.year', function ($query) use ($university) {
             $query->where('university_id', $university->id);
-        })->where('is_pending', 1)->where('is_deleted','=',false)->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
+        })->where('is_pending', 0)->where('is_deleted','=',false)->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
         return response()->json([ 'free_courses' => $freecourses]);
     }
     public function teachersearchbyname(Request $request)
@@ -427,6 +428,90 @@ class StudentLayoutController extends Controller
         $contact = Contactinfo::findOrFail(1);
         return response()->json(['info' => $contact]);
     }
+    public function addteacherfaivorit(Request $request)
+    {
+        $request->validate([
+        'student_id' => 'required|exists:students,id',
+        'teacher_id' => 'required|exists:teachers,id',
+    ]);
+
+    $student = Student::findOrFail($request->input('student_id'));
+
+    // Attach teacher if not already favorited
+    $student->favorits()->syncWithoutDetaching($request->input('teacher_id'));
+
+    return response()->json(['message' => 'تمت الإضافة الى المفضلة']);
+    }
+    public function deleteteacherfaivorit(Request $request)
+    {
+    $request->validate([
+        'student_id' => 'required|exists:students,id',
+        'teacher_id' => 'required|exists:teachers,id',
+    ]);
+
+    $student = Student::findOrFail($request->input('student_id'));
+
+    $student->favorits()->detach($request->input('teacher_id'));
+
+    return response()->json(['message' => 'تم الإزالة من المفضلة']);
+    }
+    public function addcourserate(Request $request)
+    {
+        $valdata = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+        $student = Student::findOrFail($valdata['student_id']);
+        // $student->rates()->($valdata['subject_id']);
+    }
+    public function teachercourses(Request $request)
+    {
+        $valdata = $request->validate([
+            'teacher_id' => 'required|exists:teachers,id',
+        ]);
+        $teacher = Teacher::findOrFail($valdata['teacher_id']);
+        $courses = Course::where('teacher_id','=',$teacher->id)->where('is_deleted',0)->where('is_pending',0)->with(['subject.year','teacher'])->get();
+        return response()->json(['courses' => $courses]);
+    }
+    public function yearcourses(Request $request)
+    {
+        $valdata = $request->validate([
+            'year_id' => 'required|exists:years,id',
+        ]);
+        $year = Year::findOrFail($valdata['year_id']);
+        return response()->json(['year' => $year->load('subjects.courses')]);
+    }
+
+    public function addRate(Request $request)
+{
+    $request->validate([
+        'student_id' => 'required|exists:students,id',
+        'course_id' => 'required|exists:courses,id',
+        'stars' => 'required|decimal:0,5', // assuming 1-5 rating scale
+    ]);
+
+    // Check if student already rated this course
+    $existingRate = CourseRate::where('student_id', $request->input('student_id'))
+        ->where('course_id', $request->input('course_id'))
+        ->first();
+
+    if ($existingRate) {
+        // Optionally update existing rate
+        $existingRate->update(['stars' => $request->input('stars')]);
+        return response()->json(['message' => 'تم تعديل التقييم']);
+    }
+
+    // Create new rate
+    CourseRate::create([
+        'student_id' => $request->input('student_id'),
+        'course_id' => $request->input('course_id'),
+        'stars' => $request->input('stars'),
+    ]);
+
+    return response()->json(['message' => 'تم تقييم الكورس']);
+}
+
+
 
 
 }

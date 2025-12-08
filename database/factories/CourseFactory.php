@@ -19,8 +19,8 @@ class CourseFactory extends Factory
     public function definition(): array
     {
         return [
-            'is_pending'=>fake()->boolean(),
-            'is_deleted'=>fake()->boolean(),
+            'is_pending'=>fake()->boolean(10),
+            'is_deleted'=>fake()->boolean(10),
             'courese_type'=>fake()->randomElement(['telegram','youtube']),
             'name'=>fake()->name(),
             'desc'=>fake()->text(),

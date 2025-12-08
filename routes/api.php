@@ -73,6 +73,12 @@ Route::put('/student/updateprofile',[StudentLayoutController::class,'updatestude
 Route::get('/student/salespoints',[StudentLayoutController::class,'salespoints']);
 Route::get('/student/contact',[StudentLayoutController::class,'contactinfo']);
 
+Route::post('/student/teacherfav',[StudentLayoutController::class,'addteacherfaivorit']);
+Route::delete('/student/teachernotfav',[StudentLayoutController::class,'deleteteacherfaivorit']);
+Route::post('/student/courserate',[StudentLayoutController::class,'addRate']);
+Route::get('/student/teachercourses',[StudentLayoutController::class,'teachercourses']);
+Route::get('/student/yearcourses',[StudentLayoutController::class,'yearcourses']);
+
 // teacher
 Route::get('/data/teacher/mycourses',[TeacherController::class,'mycourses']);
 Route::post('/data/teacher/note',[TeacherNoteController::class,'teacherstore']);

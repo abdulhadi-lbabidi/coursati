@@ -45,6 +45,7 @@ class Teacher extends Model
 
     public function faivorit()
     {
-        return $this->hasMany(StudentFaivoritTeacher::class);
+        return $this->belongsToMany(Student::class, 'student_faivorit_teachers')
+                ->withTimestamps();
     }
 }

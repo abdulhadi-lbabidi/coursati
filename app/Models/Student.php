@@ -21,6 +21,7 @@ class Student extends Model
     {
         return $this->morphOne(User::class, 'userable');
     }
+
     public function adminnotifi()
     {
         return $this->morphMany(Forwardnotification::class, 'notifi');
@@ -37,7 +38,7 @@ class Student extends Model
     }
     public function favorits()
     {
-        return $this->hasMany(StudentFaivoritTeacher::class);
+        return $this->belongsToMany(Teacher::class, 'student_faivorit_teachers')->withTimestamps();
     }
     public function subjects()
     {
@@ -46,7 +47,7 @@ class Student extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'student_courses');
+        return $this->belongsToMany(Course::class, 'student_faivorit_teachers');
     }
 
 }
