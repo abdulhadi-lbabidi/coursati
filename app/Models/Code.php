@@ -14,7 +14,7 @@ class Code extends Model
         'statue',
         'code',
     ];
-    public function codegroup()
+    public function codeGroup()
     {
         return $this->belongsTo( CodeGroup::class);
     }

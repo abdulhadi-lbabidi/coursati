@@ -11,13 +11,14 @@ class CodeGroup extends Model
     use HasFactory;
 
     protected $fillable = [
-        'statue',
-        'code',
+        'course_id',
+        'price',
+        'persentage',
     ];
 
     public function course()
     {
-        return $this->belongsTo( Course::class);
+        return $this->belongsTo( Course::class,'course_id');
     }
     public function codes()
     {

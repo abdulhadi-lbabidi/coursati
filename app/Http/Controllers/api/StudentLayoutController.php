@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Models\Code;
 use App\Models\Contactinfo;
 use App\Models\Course;
 use App\Models\Forwardnotification;
@@ -11,6 +12,7 @@ use App\Models\Lecture;
 use App\Models\SalesPoint;
 use App\Models\Season;
 use App\Models\Student;
+use App\Models\StudentCourse;
 use App\Models\StudentSubjects;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -276,27 +278,14 @@ class StudentLayoutController extends Controller
         $student = Student::findOrFail($valdata['student_id']);
 
         $activeCourses = $student->courses()
-        ->where('enddate', '>', Carbon::today())
+        ->where('enddate', '>', Carbon::today())->where('is_deleted','0')
         ->get();
         $expiredCourses = $student->courses()
-        ->where('enddate', '<', Carbon::today())
+        ->where('enddate', '<', Carbon::today())->where('is_deleted','0')
         ->get();
-        return response()->json(['activeCourses' => $activeCourses,'expiredCourses'=>$expiredCourses]);
+        return response()->json(['activeCourses' => $activeCourses->load('teacher','rates'),'expiredCourses'=>$expiredCourses->load('teacher','rates')]);
     }
 
-
-    public function studentnoifi(Request $request)
-    {
-        $valdata = $request->validate([
-            'student_id' => 'required|integer',
-        ]);
-        $student = Student::findOrFail($valdata['student_id']);
-        return response()->json(['video' => $student->load('timing')]);
-    }
-    public function studentsubs(Request $request)
-    {
-
-    }
     public function coursedetails(Request $request)
     {
 
@@ -391,9 +380,48 @@ class StudentLayoutController extends Controller
         $salespoits = SalesPoint::all();
         return response()->json(['salespoints' => $salespoits]);
     }
-    public function qractive(Request $request)
+    public function redeemCode(Request $request)
     {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'code' => 'required|string|size:6',
+        ]);
 
+        $code = Code::where('code', $request->input('code'))->where('statue', 0)->first();
+
+        if (!$code) {
+            return response()->json(['message' => 'هذا الكود غير صالح او مستخدم'], 400);
+        }
+        DB::beginTransaction();
+        // $course= Course::findOrFail(1);
+        $course = $code->codeGroup->course;
+        $student = Student::findOrFail($request->input("student_id"));
+
+        // Prevent duplicate subscriptions
+        $alreadySubscribed = StudentCourse::where('student_id', $student->id)
+            ->where('course_id', $course->id)
+            ->exists();
+
+        if ($alreadySubscribed) {
+            return response()->json(['message' => 'مشترك في هذا الكورس مسبقاً'], 400);
+        }
+
+        // Mark code as used
+        $code->update(['statue' => 1]);
+
+        // Get course price (assuming 'price' field exists on Course)
+        $price = $course->price;
+
+        // Create course subscription
+        StudentCourse::create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'subscription_price' => $price,
+            'persentage' => 0.15,
+            // add other fields as needed
+        ]);
+        DB::commit();
+        return response()->json(['message' => 'تم تفعيل الكورس']);
     }
     public function contactinfo()
     {

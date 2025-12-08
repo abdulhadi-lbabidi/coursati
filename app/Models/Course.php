@@ -60,4 +60,9 @@ class Course extends Model
     {
         return $this->belongsToMany(Student::class, 'student_courses', 'course_id', 'student_id')->withPivotValue('subscription_price');
     }
+
+    public function codegroup()
+    {
+        return $this->hasMany(CodeGroup::class);
+    }
 }

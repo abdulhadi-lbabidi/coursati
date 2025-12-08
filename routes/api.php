@@ -57,14 +57,13 @@ Route::get('/student/subjects',[StudentLayoutController::class,'getsubjects']);
 Route::post('/student/add/subject',[StudentLayoutController::class,'addstudentsubject']);
 Route::delete('/student/delete/subject',[StudentLayoutController::class,'deletestudentsubject']);
 Route::get('/student/subjectcourses',[StudentLayoutController::class,'getcoursefromsubject']);
-Route::get('/student/coursedetails',[LayoutController::class,'coursedetails']);
 Route::get('/student/lecturevideos',[StudentLayoutController::class,'getlecturewithvideos']);
 Route::get('/student/lecturefiles',[StudentLayoutController::class,'getlecturefiles']);
 Route::get('/student/videodetails',[StudentLayoutController::class,'getvideodetails']);
 Route::get('/student/noteifi',[StudentLayoutController::class,'uninote']);
 Route::get('/student/subscriptions',[StudentLayoutController::class,'subscriptions']);
 
-Route::get('/student/qractive',[LayoutController::class,'getvideodetails']);
+Route::post('/student/redeemcode',[StudentLayoutController::class,'redeemCode']);
 
 Route::get('/student/coursedetails',[StudentLayoutController::class,'coursedetails']);
 Route::get('/student/getstudentprofile',[StudentLayoutController::class,'studentprofile']);
@@ -82,6 +81,7 @@ Route::post('/data/teacher/lecturefile',[LectureController::class,'lecturefile']
 
 
 // admin
+Route::get('/data/admin/test',[AdminController::class,'createCodeGroup']);
 Route::get('/data/admin/home',[AdminController::class,'mainlayout']);
 Route::post('/data/admin/note',[TeacherNoteController::class,'adminstore']);
 Route::put('/data/admin/note/{id}',[TeacherNoteController::class,'statue']);
