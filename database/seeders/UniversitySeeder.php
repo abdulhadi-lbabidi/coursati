@@ -18,96 +18,14 @@ class UniversitySeeder extends Seeder
 
         University::factory()->create([
             'collagename' => 'جامعة حلب',
-        ])->each(function ($university)  {
-            // For each university, create 5 years
-            $tempname = 'السنة الأولى';
+        ]);
 
-            for ($yearNum = 1; $yearNum <= 5; $yearNum++) {
-                switch ($yearNum) {
-                    case 1:
-                        $tempname = 'السنة الأولى';
-                        break;
-                    case 2:
-                        $tempname = 'السنة الثانية';
-                        break;
-                    case 3:
-                        $tempname = 'السنة الثالثة';
-                        break;
-                    case 4:
-                        $tempname = 'السنة الرابعة';
-                        break;
-                    case 5:
-                        $tempname = 'السنة الخامسة';
-                        break;
-
-                    default:
-                        # code...
-                        break;
-                }
-                $year = Year::factory()->create([
-                    'university_id' => $university->id,
-                    'number' => $yearNum,
-                    'name' => $tempname,
-                ]);
-
-                // For each year, create 2 seasons
-                for ($seasonNum = 1; $seasonNum <= 2; $seasonNum++) {
-                    Season::factory()->create([
-                        'year_id' => $year->id,
-                        'number' => $seasonNum,
-
-                        'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
-                    ]);
-                }
-            }
-        });
         University::factory()->create([
             'collagename' => 'جامعة حمص',
-        ])->each(function ($university)  {
-            // For each university, create 5 years
-            $tempname = 'السنة الأولى';
-            for ($yearNum = 1; $yearNum <= 5; $yearNum++) {
-                switch ($yearNum) {
-                    case 1:
-                        $tempname = 'السنة الأولى';
-                        break;
-                    case 2:
-                        $tempname = 'السنة الثانية';
-                        break;
-                    case 3:
-                        $tempname = 'السنة الثالثة';
-                        break;
-                    case 4:
-                        $tempname = 'السنة الرابعة';
-                        break;
-                    case 5:
-                        $tempname = 'السنة الخامسة';
-                        break;
-
-                    default:
-                        # code...
-                        break;
-                }
-                $year = Year::factory()->create([
-                    'university_id' => $university->id,
-                    'number' => $yearNum,
-                    'name' => $tempname,
-                ]);
-
-                // For each year, create 2 seasons
-                for ($seasonNum = 1; $seasonNum <= 2; $seasonNum++) {
-                    Season::factory()->create([
-                        'year_id' => $year->id,
-                        'number' => $seasonNum,
-
-                        'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
-                    ]);
-                }
-            }
-        });
+        ]);
         University::factory()->create([
             'collagename' => 'جامعة دمشق',
-        ])->each(function ($university) {
+        ]);
             // For each university, create 5 years
             $tempname = 'السنة الأولى';
 
@@ -128,27 +46,52 @@ class UniversitySeeder extends Seeder
                     case 5:
                         $tempname = 'السنة الخامسة';
                         break;
-
                     default:
                         # code...
                         break;
                 }
                 $year = Year::factory()->create([
-                    'university_id' => $university->id,
+                    'university_id' => 3,
+                    'number' => $yearNum,
+                    'name' => $tempname,
+                ]);
+                $year = Year::factory()->create([
+                    'university_id' => 2,
+                    'number' => $yearNum,
+                    'name' => $tempname,
+                ]);
+                $year = Year::factory()->create([
+                    'university_id' => 1,
                     'number' => $yearNum,
                     'name' => $tempname,
                 ]);
 
-                // For each year, create 2 seasons
-                for ($seasonNum = 1; $seasonNum <= 2; $seasonNum++) {
-                    Season::factory()->create([
-                        'year_id' => $year->id,
-                        'number' => $seasonNum,
 
-                        'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
-                    ]);
-                }
             }
-        });
+
+
+        for ($seasonNum = 1; $seasonNum <= 2; $seasonNum++) {
+                Season::factory()->create([
+                    'university_id' => 1,
+                    'number' => $seasonNum,
+
+                    'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
+                ]);
+            }
+        for ($seasonNum = 1; $seasonNum <= 2; $seasonNum++) {
+            Season::factory()->create([
+                'university_id' => 2,
+                'number' => $seasonNum,
+                'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
+            ]);
+        }
+        for ($seasonNum = 1; $seasonNum <= 2; $seasonNum++) {
+            Season::factory()->create([
+                'university_id' => 3,
+                'number' => $seasonNum,
+
+                'name' => $seasonNum === 1 ? 'الفصل الأول' : 'الفصل الثاني',
+            ]);
+        }
     }
 }

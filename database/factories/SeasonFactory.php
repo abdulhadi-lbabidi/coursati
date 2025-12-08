@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\University;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class SeasonFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name'=>fake()->name,
+            'number'=>fake()->numberBetween(1,5),
+            'university_id'=>University::all()->random()->id,
+            'is_deleted'=>fake()->boolean(1),
         ];
     }
 }

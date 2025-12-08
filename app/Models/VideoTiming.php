@@ -11,7 +11,8 @@ class VideoTiming extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'time',
+        'minutes',
+        'secounds',
         'video_id',
     ];
 

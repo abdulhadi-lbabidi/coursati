@@ -19,7 +19,8 @@ class VideoTimingFactory extends Factory
     {
         return [
             'video_id'=>Video::all()->random()->id,
-            'time'=>fake()->randomFloat(2,0,10.00),
+            'minutes'=>fake()->numberBetween(0,59),
+            'secounds'=>fake()->numberBetween(0,59),
             'name'=>fake()->name(),
         ];
     }

@@ -37,7 +37,11 @@ class University extends Model
     }
     public function teachers()
     {
-        return $this->hasMany(Teacher::class)->where('is_deleted', '0');
+        return $this->hasMany(Teacher::class);
+    }
+    public function seasons()
+    {
+        return $this->hasMany(Season::class)->where('is_deleted', '0');
     }
     public function noteification()
     {

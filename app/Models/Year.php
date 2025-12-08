@@ -27,11 +27,11 @@ class Year extends Model
     }
     public function subjects()
     {
-        return $this->hasManyThrough(Subject::class, Season::class)->where('seasons.is_deleted', '0');
+        return $this->hasMany(Subject::class)->where('is_deleted', '0');
     }
     public function subjectsync()
     {
-        return $this->hasManyThrough(Subject::class, Season::class);
+        return $this->hasMany(Subject::class);
     }
 
 }

@@ -24,7 +24,7 @@ class SubjectFactory extends Factory
             'subject_tag_name'=>fake()->name,
             'subject_nature'=>fake()->randomElement(['writen','automation']),
             'is_deleted'=>fake()->boolean,
-            'season_id'=>Season::all()->random()->id,
+            'year_id'=>Year::all()->random()->id,
         ];
     }
 }

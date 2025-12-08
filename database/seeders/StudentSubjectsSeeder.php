@@ -15,5 +15,8 @@ class StudentSubjectsSeeder extends Seeder
     {
         $student = Student::findOrFail(25);
         $student->subjects()->syncWithoutDetaching(25);
+        $student->subjects()->syncWithoutDetaching(26);
+        $student->subjects()->syncWithoutDetaching(27);
+        $student->subjects()->syncWithoutDetaching(28);
     }
 }

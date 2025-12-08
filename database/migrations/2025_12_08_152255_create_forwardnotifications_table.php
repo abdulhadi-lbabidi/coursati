@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('video_timings', function (Blueprint $table) {
+        Schema::create('forwardnotifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('video_id')->references('id')->on('videos')->onDelete('cascade');
-            $table->integer('minutes');
-            $table->integer('secounds');
-            $table->string('name');
+            $table->string('title');
+            $table->text('description');
+            $table->morphs('notifi');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('video_timings');
+        Schema::dropIfExists('forwardnotifications');
     }
 };

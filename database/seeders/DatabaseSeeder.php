@@ -51,6 +51,8 @@ class DatabaseSeeder extends Seeder
             AppUpdateSeeder::class,]);
         $this->call([
             StudentSubjectsSeeder::class,]);
+        $this->call([
+            ForwardnotificationSeeder::class,]);
         Contactinfo::factory()->count(1)->create();
 
     }

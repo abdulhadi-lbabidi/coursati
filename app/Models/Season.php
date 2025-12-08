@@ -13,17 +13,13 @@ class Season extends Model
         protected $fillable = [
         'name',
         'number',
-        'year_id',
+        'university_id',
         'is_deleted'
     ];
 
-    public function year()
+    public function university()
     {
-        return $this->belongsTo( Year::class)->where('is_deleted', '0');
-    }
-    public function subjects()
-    {
-        return $this->hasMany(Subject::class);
+        return $this->belongsTo( University::class)->where('is_deleted', '0');
     }
 
 

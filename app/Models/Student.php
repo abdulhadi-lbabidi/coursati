@@ -21,10 +21,11 @@ class Student extends Model
     {
         return $this->morphOne(User::class, 'userable');
     }
-    public function university()
+    public function adminnotifi()
     {
-        return $this->belongsTo( University::class);
+        return $this->morphMany(Forwardnotification::class, 'notifi');
     }
+
     public function year()
     {
         return $this->belongsTo( Year::class);
@@ -41,6 +42,11 @@ class Student extends Model
     public function subjects()
     {
         return $this->belongsToMany(Subject::class,'student_subjects');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'student_courses');
     }
 
 }

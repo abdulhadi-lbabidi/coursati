@@ -16,11 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('telegram_url')->nullable();
             $table->string('description')->nullable();
-            $table->boolean('is_pending')->default(true);
+            $table->enum('statue',['deleted','banned','pending','active'])->default('pending');
             $table->enum('gender',['ذكر','أنثى']);
             $table->text('image_url')->nullable();
             $table->float('persentage');
-            $table->boolean('is_deleted')->default(false);
             $table->foreignId('university_id')->references('id')->on('universities')->onDelete('cascade');;
             $table->timestamps();
         });

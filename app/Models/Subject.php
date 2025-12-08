@@ -16,16 +16,16 @@ class Subject extends Model
         'subject_tag_name',
         'subject_nature',
         'is_deleted',
-        'season_id',
+        'year_id',
     ];
-    public function season()
+    public function year()
     {
-        return $this->belongsTo( Season::class)->where('is_deleted', '0');
+        return $this->belongsTo( Year::class)->where('is_deleted', '0');
     }
 
     public function courses()
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Course::class)->where('is_deleted', '0')->where('is_pending', '0');
     }
 
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\api\LectureController;
 use App\Http\Controllers\api\SalesPointController;
 use App\Http\Controllers\api\StudentController;
 use App\Http\Controllers\api\StudentFaivoritController;
+use App\Http\Controllers\api\StudentLayoutController;
 use App\Http\Controllers\api\SubjectController;
 use App\Http\Controllers\api\TeacherController;
 use App\Http\Controllers\api\TeacherNoteController;
@@ -35,36 +36,43 @@ Route::get('/user', function (Request $request) {
 // Route::apiResource('/video',VideoController::class);
 // Route::apiResource('/salespoint',SalesPointController::class);
 
-Route::post('/student/login',[AuthController::class,'loginstudent']);
 Route::post('/admin/login',[AuthController::class,'loginadmin']);
 Route::post('/teacher/login',[AuthController::class,'loginteacher']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 
 // student
-Route::get('/student/signup',[LayoutController::class,'signupstudent']);
-Route::post('/student/signup',[LayoutController::class,'signupnewstudent']);
-Route::get('/student/gethome',[LayoutController::class,'homepage']);
-Route::get('/student/coursesearch',[LayoutController::class,'coursesearchbyname']);
-Route::get('/student/teachersearch',[LayoutController::class,'teachersearchbyname']);
-Route::get('/student/subjectsearch',[LayoutController::class,'subjectsearchbyname']);
-Route::get('/student/getyears',[LayoutController::class,'uniyears']);
+Route::post('/student/login',[StudentLayoutController::class,'loginstudent']);
+Route::get('/student/signup',[StudentLayoutController::class,'signupstudent']);
+Route::post('/student/signup',[StudentLayoutController::class,'signupnewstudent']);
+Route::get('/student/gethome',[StudentLayoutController::class,'homepage']);
+Route::get('/student/freecourses',[StudentLayoutController::class,'freecourses']);
+Route::get('/student/coursesearch',[StudentLayoutController::class,'coursesearchbyname']);
+Route::get('/student/teachersearch',[StudentLayoutController::class,'teachersearchbyname']);
+Route::get('/student/subjectsearch',[StudentLayoutController::class,'subjectsearchbyname']);
+Route::get('/student/mysubjects',[StudentLayoutController::class,'getstudentsubjects']);
+Route::get('/student/getyears',[StudentLayoutController::class,'uniyears']);
+Route::get('/student/teacher',[StudentLayoutController::class,'getteachers']);
+Route::get('/student/subjects',[StudentLayoutController::class,'getsubjects']);
+Route::post('/student/add/subject',[StudentLayoutController::class,'addstudentsubject']);
+Route::delete('/student/delete/subject',[StudentLayoutController::class,'deletestudentsubject']);
+Route::get('/student/subjectcourses',[StudentLayoutController::class,'getcoursefromsubject']);
 Route::get('/student/coursedetails',[LayoutController::class,'coursedetails']);
-Route::get('/student/teacher',[LayoutController::class,'getteachers']);
-Route::get('/student/mysubjects',[LayoutController::class,'getstudentsubjects']);
-Route::post('/student/add/subject',[LayoutController::class,'addstudentsubject']);
-Route::delete('/student/delete/subject',[LayoutController::class,'deletestudentsubject']);
-Route::get('/student/subjects',[LayoutController::class,'getsubjects']);
-Route::get('/student/subjectcourses',[LayoutController::class,'getcoursefromsubject']);
-Route::get('/student/yearcourses',[LayoutController::class,'getcoursefromyear']);
-Route::get('/student/teachercourses',[LayoutController::class,'getcoursefromteacher']);
-Route::get('/student/lecturevideofiles',[LayoutController::class,'getlecvideoswithfiles']);
-Route::get('/student/noteifi',[LayoutController::class,'uninote']);
-Route::get('/student/salespoints',[LayoutController::class,'unisales']);
-Route::get('/student/getupdates',[LayoutController::class,'getupdates']);
-Route::get('/student/videodetails',[LayoutController::class,'getvideodetails']);
-Route::get('/student/qractive',[LayoutController::class,'getvideodetails']);
-Route::put('/student/editprofile',[LayoutController::class,'editprofile']);
+Route::get('/student/lecturevideos',[StudentLayoutController::class,'getlecturewithvideos']);
+Route::get('/student/lecturefiles',[StudentLayoutController::class,'getlecturefiles']);
+Route::get('/student/videodetails',[StudentLayoutController::class,'getvideodetails']);
+Route::get('/student/noteifi',[StudentLayoutController::class,'uninote']);
+Route::get('/student/subscriptions',[StudentLayoutController::class,'subscriptions']);
 
+Route::get('/student/qractive',[LayoutController::class,'getvideodetails']);
+
+Route::get('/student/coursedetails',[StudentLayoutController::class,'coursedetails']);
+Route::get('/student/getstudentprofile',[StudentLayoutController::class,'studentprofile']);
+Route::put('/student/updateuniversity',[StudentLayoutController::class,'updatestudentuniversity']);
+Route::put('/student/updatepassword',[StudentLayoutController::class,'updatestudentpass']);
+Route::put('/student/updateprofile',[StudentLayoutController::class,'updatestudentprofile']);
+Route::get('/student/salespoints',[StudentLayoutController::class,'salespoints']);
+Route::get('/student/contact',[StudentLayoutController::class,'contactinfo']);
 
 // teacher
 Route::get('/data/teacher/mycourses',[TeacherController::class,'mycourses']);

@@ -16,8 +16,6 @@ class TeacherNotification extends Model
         'is_allowed',
         'university_id',
         'teacher_id',
-        'course_id',
-
     ];
 
     public function university()

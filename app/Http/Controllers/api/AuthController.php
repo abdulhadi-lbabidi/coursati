@@ -65,6 +65,6 @@ class AuthController extends Controller
         /** @var \App\Models\User $user */
 
         $request->user()->currentAccessToken()->delete();
-        return response('',204);
+        return response()->json(['message'=>'تم تسجيل الخروج']);
     }
 }
