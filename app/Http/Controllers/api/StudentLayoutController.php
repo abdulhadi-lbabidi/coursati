@@ -225,7 +225,7 @@ class StudentLayoutController extends Controller
         ]);
         $subject = Subject::findOrFail($valdata['subject_id']);
 
-        return response()->json(['courses' => $subject->courses]);
+        return response()->json(['courses' => $subject->courses->load('subject.year','teacher')]);
     }
 
     public function getlecturewithvideos(Request $request)
