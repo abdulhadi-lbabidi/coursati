@@ -30,11 +30,11 @@ class Course extends Model
     ];
     public function subject()
     {
-        return $this->belongsTo( Subject::class);
+        return $this->belongsTo( Subject::class)->where('is_deleted',0);
     }
     public function teacher()
     {
-        return $this->belongsTo( Teacher::class);
+        return $this->belongsTo( Teacher::class)->where('statue','!=','deleted')->where('statue','!=','pending');
     }
     public function year()
     {

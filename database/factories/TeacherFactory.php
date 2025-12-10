@@ -20,7 +20,7 @@ class TeacherFactory extends Factory
         return [
             'name'=>fake()->name,
             'description'=>fake()->text(),
-            'statue'=>fake()->randomElement(['deleted','banned','pending','active']),
+            'statue'=>fake()->randomElement(['banned','active']),
             'gender'=>fake()->randomElement(['ذكر','أنثى']),
             'image_url'=>fake()->imageUrl(),
             'persentage'=>fake()->randomFloat(2,0.01,0.3),

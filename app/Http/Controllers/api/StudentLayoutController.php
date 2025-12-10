@@ -92,15 +92,52 @@ class StudentLayoutController extends Controller
         $university = University::findOrFail($valdata['university_id']);
         $salespoint = SalesPoint::where('university_id', '=', $university->id)->get();
 
-        $freecourses = Course::whereHas('subject.year', function ($query) use ($university) {
-            $query->where('university_id', $university->id);
-        })->where('is_pending', 0)->where('is_deleted','=',false)->where('price','=',0)->inRandomOrder()->limit(5)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
-        $recentcourses = Course::latest('created_at')->where('is_pending',0)->whereHas('subject.year', function ($query) use ($university) {
-            $query->where('university_id', $university->id);
-        })->where('is_deleted','=', false)->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->take(5)->get();
-        $mostvisited = Course::where('is_deleted','=',false)->whereHas('subject.year', function ($query) use ($university) {
-            $query->where('university_id', $university->id);
-        })->where('is_pending',0)->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->limit(5)->get();
+        $recentcourses = Course::latest('created_at')->where('is_deleted', 0)
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue', 'active')->where('statue', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($university) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                });
+        })->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->limit(5)
+        ->get();
+
+
+        $freecourses = Course::where('is_deleted', 0)
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue', 'active')->orWhere('statue', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($university) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                });
+        })->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->inRandomOrder()->limit(5)
+        ->get();
+
+
+        $mostvisited = Course::where('is_deleted', 0)
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue', 'active')->orWhere('statue', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($university) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->orWhere('university_id','=',$university->id);
+                });
+        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->limit(5)
+        ->get();
+        // $freecourses = Course::whereHas('subject.year', function ($query) use ($university) {
+        //     $query->where('university_id', $university->id);
+        // })->where('is_pending', 0)->where('is_deleted','=',false)->where('price','=',0)->inRandomOrder()->limit(5)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
+        // $recentcourses = Course::latest('created_at')->where('is_pending',0)->whereHas('subject.year', function ($query) use ($university) {
+        //     $query->where('university_id', $university->id);
+        // })->where('is_deleted','=', false)->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->take(5)->get();
+        // $mostvisited = Course::where('is_deleted','=',false)->whereHas('subject.year', function ($query) use ($university) {
+        //     $query->where('university_id', $university->id);
+        // })->where('is_pending',0)->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->limit(5)->get();
         return response()->json([ 'free_courses' => $freecourses, 'sales_points' => $salespoint, 'recently_added_courses' => $recentcourses, 'most_visited_courses' => $mostvisited]);
     }
     public function freecourses(Request $request)
@@ -110,9 +147,17 @@ class StudentLayoutController extends Controller
         ]);
         $university = University::findOrFail($valdata['university_id']);
 
-        $freecourses = Course::whereHas('subject.year', function ($query) use ($university) {
-            $query->where('university_id', $university->id);
-        })->where('is_pending', 0)->where('is_deleted','=',false)->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->get();
+        $freecourses = Course::where('is_deleted', 0)
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue', 'active')->orWhere('statue', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($university) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                });
+        })->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->inRandomOrder()->limit(5)
+        ->get();
         return response()->json([ 'free_courses' => $freecourses]);
     }
     public function teachersearchbyname(Request $request)
@@ -123,7 +168,7 @@ class StudentLayoutController extends Controller
         ]);
         $university = University::findOrFail($valdata['university_id']);
         $universityId = $university->id;
-        $results = Teacher::where('statue','!=', 'deleted')->where('statue','!=', 'pending')->where('name', 'like', '%' . $valdata['name'] . '%')->withCount('courses','faivorit')->with('university')->get();
+        $results = Teacher::where('statue','!=', 'deleted')->orWhere('statue','!=', 'pending')->where('name', 'like', '%' . $valdata['name'] . '%')->withCount('courses','faivorit')->with('university')->get();
         return response()->json(['teachers' => $results]);
     }
     public function coursesearchbyname(Request $request)
@@ -133,10 +178,18 @@ class StudentLayoutController extends Controller
             'university_id' => 'required|integer',
         ]);
         $university = University::findOrFail($valdata['university_id']);
-        $universityId = $university->id;
-        $courses = Course::where('is_deleted', 0)->where('is_pending', 0)->where( 'name', 'like', '%'.$valdata['name'].'%')->withAvg('rates', 'stars')
-    ->with(['subject.year', 'teacher',])
-    ->get();
+
+        $courses  = Course::where('is_deleted', 0)->where( 'name', 'like', '%'.$valdata['name'].'%')
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue', 'active')->orWhere('statue', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($university) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                });
+        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->limit(5)
+        ->get();
         return response()->json(['courses' => $courses,'season'=>$university->seasons]);
     }
 
@@ -224,9 +277,19 @@ class StudentLayoutController extends Controller
         $valdata = $request->validate([
             'subject_id' => 'required|integer',
         ]);
-        $subject = Subject::findOrFail($valdata['subject_id']);
+        $courses = Course::where('is_deleted', 0)->where('is_pending', 0)
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue', 'active')->orWhere('statue', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($valdata) {
+            $query->where('is_deleted', 0)->where('id','=',$valdata['subject_id'])
+                ->whereHas('year', function ($query)  {
+                    $query->where('is_deleted', 0);
+                });
+        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->limit(5)
+        ->get();
 
-        return response()->json(['courses' => $subject->courses->load('subject.year','teacher')]);
+        return response()->json(['courses' => $courses]);
     }
 
     public function getlecturewithvideos(Request $request)
@@ -470,7 +533,17 @@ class StudentLayoutController extends Controller
             'teacher_id' => 'required|exists:teachers,id',
         ]);
         $teacher = Teacher::findOrFail($valdata['teacher_id']);
-        $courses = Course::where('teacher_id','=',$teacher->id)->where('is_deleted',0)->where('is_pending',0)->with(['subject.year','teacher'])->get();
+        $courses  = Course::where('is_deleted', 0)->where('is_pending', 0)
+        ->whereHas('teacher', function ($query) use ($teacher) {
+            $query->where('statue','=', 'active')->orWhere('statue','=', 'banned')->where('teacher_id','=',$teacher->id);
+        })
+        ->whereHas('subject', function ($query) use ($teacher) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($teacher) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$teacher->university_id);
+                });
+        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        ->get();
         return response()->json(['courses' => $courses]);
     }
     public function yearcourses(Request $request)
@@ -478,8 +551,18 @@ class StudentLayoutController extends Controller
         $valdata = $request->validate([
             'year_id' => 'required|exists:years,id',
         ]);
-        $year = Year::findOrFail($valdata['year_id']);
-        return response()->json(['year' => $year->load('subjects.courses')]);
+        $courses = Course::where('is_deleted', 0)->where('is_pending', 0)
+        ->whereHas('teacher', function ($query) {
+            $query->where('statue','=', 'active')->orWhere('statue','=', 'banned');
+        })
+        ->whereHas('subject', function ($query) use ($valdata) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) use ($valdata) {
+                    $query->where('is_deleted', 0)->where('year_id','=',$valdata['year_id']);
+                });
+        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        ->get();
+        return response()->json(['courses' => $courses]);
     }
 
     public function addRate(Request $request)

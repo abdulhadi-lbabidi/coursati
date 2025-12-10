@@ -13,6 +13,6 @@ class LectureFileSeeder extends Seeder
      */
     public function run(): void
     {
-        LectureFile::factory()->count(40)->create();
+        LectureFile::factory()->count(700)->create();
     }
 }

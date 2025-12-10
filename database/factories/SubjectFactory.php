@@ -23,7 +23,7 @@ class SubjectFactory extends Factory
             'doctor_name'=>fake()->name,
             'subject_tag_name'=>fake()->name,
             'subject_nature'=>fake()->randomElement(['writen','automation']),
-            'is_deleted'=>fake()->boolean,
+            'is_deleted'=>fake()->boolean(10),
             'year_id'=>Year::all()->random()->id,
         ];
     }

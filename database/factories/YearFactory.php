@@ -20,6 +20,7 @@ class YearFactory extends Factory
         return [
             'number' => fake()->phoneNumber,
             'university_id'=> University::all()->random()->id,
+            'is_deleted'=>fake()->boolean(0)
         ];
     }
 }

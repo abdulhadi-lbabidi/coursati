@@ -47,7 +47,7 @@ class Student extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'student_faivorit_teachers');
+        return $this->belongsToMany(Course::class, 'student_courses');
     }
 
 }
