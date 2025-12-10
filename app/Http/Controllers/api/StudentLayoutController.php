@@ -94,7 +94,7 @@ class StudentLayoutController extends Controller
 
         $recentcourses = Course::latest('created_at')->where('is_deleted', 0)->where('is_pending', 0)
         ->whereHas('teacher', function ($query) {
-            $query->where('statue', 'active')->where('statue', 'banned');
+            $query->where('statue', 'active')->orWhere('statue', 'banned');
         })
         ->whereHas('subject', function ($query) use ($university) {
             $query->where('is_deleted', 0)
