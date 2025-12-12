@@ -98,6 +98,7 @@ Route::get('/teacher/course/lectures',[TeacherLayoutController::class,'getCourse
 Route::get('/teacher/course/lecture',[TeacherLayoutController::class,'getLectureDetails']);
 Route::get('/teacher/course/lecture/files',[TeacherLayoutController::class,'getLectureFiles']);
 Route::get('/teacher/course/lecture/videos',[TeacherLayoutController::class,'getLectureVideos']);
+Route::get('/teacher/course/lecture/video',[TeacherLayoutController::class,'getVideoWithTiming']);
 Route::post('/teacher/course/lecture/video/add',[TeacherLayoutController::class,'addVideo']);
 Route::delete('/teacher/course/lecture/video/delete',[TeacherLayoutController::class,'deleteVideo']);
 Route::post('/teacher/course/lecture/file/add',[TeacherLayoutController::class,'addLectureFile']);
