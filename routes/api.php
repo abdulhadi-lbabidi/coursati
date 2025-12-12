@@ -12,6 +12,7 @@ use App\Http\Controllers\api\StudentFaivoritController;
 use App\Http\Controllers\api\StudentLayoutController;
 use App\Http\Controllers\api\SubjectController;
 use App\Http\Controllers\api\TeacherController;
+use App\Http\Controllers\api\TeacherLayoutController;
 use App\Http\Controllers\api\TeacherNoteController;
 use App\Http\Controllers\api\UniversityController;
 use App\Http\Controllers\api\VideoController;
@@ -37,7 +38,6 @@ Route::get('/user', function (Request $request) {
 // Route::apiResource('/salespoint',SalesPointController::class);
 
 Route::post('/admin/login',[AuthController::class,'loginadmin']);
-Route::post('/teacher/login',[AuthController::class,'loginteacher']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 
@@ -80,6 +80,45 @@ Route::get('/student/teachercourses',[StudentLayoutController::class,'teachercou
 Route::get('/student/yearcourses',[StudentLayoutController::class,'yearcourses']);
 
 // teacher
+
+Route::post('/teacher/login',[TeacherLayoutController::class,'loginteacher']);
+Route::get('/teacher/signup',[TeacherLayoutController::class,'signupteacher']);
+Route::post('/teacher/signup',[TeacherLayoutController::class,'signupnewteacher']);
+Route::get('/teacher/home',[TeacherLayoutController::class,'homepage']);
+Route::get('/teacher/courses',[TeacherLayoutController::class,'teachercourses']);
+Route::get('/teacher/teachersubjects',[TeacherLayoutController::class,'teachersubjects']);
+Route::post('/teacher/courses/add',[TeacherLayoutController::class,'createCourseIfAllowed']);
+Route::get('/teacher/course/subs',[TeacherLayoutController::class,'getCoursesByExpiry']);
+Route::put('/teacher/course',[TeacherLayoutController::class,'updateCourse']);
+Route::post('/teacher/lectures/add',[TeacherLayoutController::class,'createLecture']);
+Route::delete('/teacher/lecture/delete',[TeacherLayoutController::class,'destroyLecture']);
+Route::put('/teacher/lecture/update',[TeacherLayoutController::class,'updateLecture']);
+Route::get('/teacher/course/details',[TeacherLayoutController::class,'getCourseDetails']);
+Route::get('/teacher/course/lectures',[TeacherLayoutController::class,'getCourseLectures']);
+Route::get('/teacher/course/lecture',[TeacherLayoutController::class,'getLectureDetails']);
+Route::get('/teacher/course/lecture/files',[TeacherLayoutController::class,'getLectureFiles']);
+Route::get('/teacher/course/lecture/videos',[TeacherLayoutController::class,'getLectureVideos']);
+Route::post('/teacher/course/lecture/video/add',[TeacherLayoutController::class,'addVideo']);
+Route::delete('/teacher/course/lecture/video/delete',[TeacherLayoutController::class,'deleteVideo']);
+Route::post('/teacher/course/lecture/file/add',[TeacherLayoutController::class,'addLectureFile']);
+Route::delete('/teacher/course/lecture/file/delete',[TeacherLayoutController::class,'deleteLectureFile']);
+Route::post('/teacher/notification/add',[TeacherLayoutController::class,'addTeacherNotification']);
+Route::get('/teacher/notifications',[TeacherLayoutController::class,'getTeacherNotifications']);
+Route::get('/teacher/profile',[TeacherLayoutController::class,'getTeacherWithUserAndUniversity']);
+Route::put('/teacher/profile/edit',[TeacherLayoutController::class,'editTeacherprofile']);
+
+Route::get('/teacher/profit/bycourse',[TeacherLayoutController::class,'teacherInnerByCourse']);
+Route::get('/teacher/profit/bymonth',[TeacherLayoutController::class,'teacherInnerByMonth']);
+Route::get('/teacher/profit/withdraws',[TeacherLayoutController::class,'teacherWithdraws']);
+
+
+
+
+
+Route::get('/teacher/salespoints',[TeacherLayoutController::class,'salespoints']);
+Route::get('/teacher/contact',[TeacherLayoutController::class,'contactinfo']);
+
+
 Route::get('/data/teacher/mycourses',[TeacherController::class,'mycourses']);
 Route::post('/data/teacher/note',[TeacherNoteController::class,'teacherstore']);
 Route::post('/data/teacher/lecturefile',[LectureController::class,'lecturefile']);

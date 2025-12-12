@@ -35,8 +35,7 @@ class University extends Model
     {
         return $this->hasMany(Teacher::class);
     }
-    public function teachers()
-    {
+    public function teachers() {
         return $this->hasMany(Teacher::class);
     }
     public function seasons()

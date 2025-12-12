@@ -206,7 +206,8 @@ class StudentLayoutController extends Controller
         $student = Student::findOrFail($valdata['student_id']);
         $universityid = $student->year->university->id;
         $seasons = Season::where('university_id','=',$universityid)->get();
-        return response()->json(['year' => $student->year->load('subjects'),'seasons'=>$seasons]);
+
+        return response()->json(['year' => $student->subjects->load('year'),'seasons'=>$seasons]);
     }
 
     public function uniyears(Request $request)

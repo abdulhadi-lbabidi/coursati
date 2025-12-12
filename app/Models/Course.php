@@ -65,4 +65,8 @@ class Course extends Model
     {
         return $this->hasMany(CodeGroup::class);
     }
+    public function subscriptions()
+    {
+        return $this->hasMany(StudentCourse::class);
+    }
 }

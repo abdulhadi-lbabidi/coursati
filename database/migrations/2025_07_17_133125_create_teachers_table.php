@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('statue',['deleted','banned','pending','active'])->default('pending');
             $table->enum('gender',['ذكر','أنثى']);
             $table->text('image_url')->nullable();
-            $table->float('persentage');
+            $table->decimal('persentage')->default(0);
             $table->foreignId('university_id')->references('id')->on('universities')->onDelete('cascade');;
             $table->timestamps();
         });

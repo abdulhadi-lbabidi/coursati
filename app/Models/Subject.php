@@ -28,4 +28,9 @@ class Subject extends Model
         return $this->hasMany(Course::class)->where('is_deleted', '0')->where('is_pending', '0');
     }
 
+    public function teachers() {
+        return $this->belongsToMany(Teacher::class);
+    }
+
+
 }

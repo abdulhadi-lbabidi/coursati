@@ -30,6 +30,10 @@ class Teacher extends Model
     {
         return $this->hasMany(Course::class)->where('is_deleted',0)->where('is_pending',0);
     }
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class)->where('is_deleted',0);
+    }
     public function withdraws()
     {
         return $this->hasMany(Course::class);
@@ -48,4 +52,5 @@ class Teacher extends Model
         return $this->belongsToMany(Student::class, 'student_faivorit_teachers')
                 ->withTimestamps();
     }
+
 }
