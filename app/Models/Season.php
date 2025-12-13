@@ -10,6 +10,10 @@ class Season extends Model
     /** @use HasFactory<\Database\Factories\SeasonFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'university_id' => 'integer',
+        'is_deleted' => 'boolean',
+    ];
         protected $fillable = [
         'name',
         'number',

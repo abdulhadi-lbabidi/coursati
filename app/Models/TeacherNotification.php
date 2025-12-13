@@ -10,6 +10,11 @@ class TeacherNotification extends Model
     /** @use HasFactory<\Database\Factories\TeacherNotificationFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'university_id' => 'integer',
+        'teacher_id' => 'integer',
+        'is_allowed' => 'boolean',
+    ];
     protected $fillable = [
         'title',
         'description',

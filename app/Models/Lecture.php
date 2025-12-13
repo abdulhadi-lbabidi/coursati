@@ -10,6 +10,10 @@ class Lecture extends Model
     /** @use HasFactory<\Database\Factories\LectureFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'course_id' => 'integer',
+        'number' => 'integer',
+    ];
     protected $fillable = [
         'course_id',
         'name',

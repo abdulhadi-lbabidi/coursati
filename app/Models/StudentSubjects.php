@@ -10,6 +10,11 @@ class StudentSubjects extends Model
     /** @use HasFactory<\Database\Factories\StudentSubjectsFactory> */
     use HasFactory;
 
+
+    protected $casts = [
+        'subject_id' => 'integer',
+        'student_id' => 'integer',
+    ];
     protected $fillable = [
         'subject_id',
         'student_id',

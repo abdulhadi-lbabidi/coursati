@@ -10,6 +10,12 @@ class Video extends Model
     /** @use HasFactory<\Database\Factories\VideoFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'lecture_id' => 'integer',
+        'views' => 'integer',
+        'number' => 'integer',
+        'is_free' => 'boolean',
+    ];
     protected $fillable = [
         'name',
         'desc',

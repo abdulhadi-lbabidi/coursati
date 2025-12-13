@@ -10,6 +10,12 @@ class Teacher extends Model
     /** @use HasFactory<\Database\Factories\TeacherFactory> */
     use HasFactory;
 
+
+    protected $casts = [
+        'university_id' => 'integer',
+        'persentage' => 'decimal',
+
+    ];
     protected $fillable = [
         'name',
         'telegram_url',

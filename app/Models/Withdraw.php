@@ -10,6 +10,12 @@ class Withdraw extends Model
     /** @use HasFactory<\Database\Factories\WithdrawFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'teacher_id' => 'integer',
+        'amount' => 'integer',
+        'withdraw_date' => 'date',
+    ];
+
     protected $fillable = [
         'amount',
         'withdraw_date',

@@ -10,6 +10,10 @@ class University extends Model
     /** @use HasFactory<\Database\Factories\UniversityFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'is_deleted' => 'boolean',
+    ];
+
     protected $fillable = [
         'name',
         'collagename',

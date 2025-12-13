@@ -10,11 +10,14 @@ class Student extends Model
     /** @use HasFactory<\Database\Factories\StudentFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'year_id' => 'integer',
+        'is_banned' => 'boolean',
+    ];
     protected $fillable = [
         'name',
         'year_id',
         'is_banned',
-
     ];
 
     public function user()

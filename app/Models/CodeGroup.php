@@ -10,6 +10,11 @@ class CodeGroup extends Model
     /** @use HasFactory<\Database\Factories\CodeGroupFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'course_id'=>'integer',
+        'price'=>'decimal',
+        'persentage'=>'decimal',
+    ];
     protected $fillable = [
         'course_id',
         'price',

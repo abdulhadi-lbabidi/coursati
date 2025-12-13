@@ -9,6 +9,12 @@ class VideoTiming extends Model
 {
     /** @use HasFactory<\Database\Factories\VideoTimingFactory> */
     use HasFactory;
+
+    protected $casts = [
+        'video_id' => 'integer',
+        'minutes' => 'integer',
+        'secounds' => 'integer',
+    ];
     protected $fillable = [
         'name',
         'minutes',

@@ -10,6 +10,13 @@ class StudentCourse extends Model
     /** @use HasFactory<\Database\Factories\StudentCourseFactory> */
     use HasFactory;
 
+        protected $casts = [
+        'student_id' => 'integer',
+        'course_id' => 'integer',
+        'subscription_price' => 'integer',
+        'persentage' => 'decimal',
+    ];
+
     protected $fillable = [
         'student_id',
         'course_id',

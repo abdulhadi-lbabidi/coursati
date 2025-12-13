@@ -10,6 +10,10 @@ class Subject extends Model
     /** @use HasFactory<\Database\Factories\SubjectFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'year_id' => 'integer',
+        'is_deleted' => 'boolean',
+    ];
     protected $fillable = [
         'name',
         'doctor_name',

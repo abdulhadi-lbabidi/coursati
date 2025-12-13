@@ -9,6 +9,12 @@ class LectureFile extends Model
 {
     /** @use HasFactory<\Database\Factories\LectureFileFactory> */
     use HasFactory;
+
+    protected $casts = [
+        'lecture_id' => 'integer',
+        'number' => 'integer',
+        'size' => 'decimal',
+    ];
     protected $fillable = [
         'lecture_id',
         'name',

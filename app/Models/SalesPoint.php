@@ -10,6 +10,12 @@ class SalesPoint extends Model
     /** @use HasFactory<\Database\Factories\SalesPointFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'university_id' => 'integer',
+        'is_deleted' => 'boolean',
+        'lng' => 'decimal',
+        'lat' => 'decimal',
+    ];
     protected $fillable = [
         'name',
         'phone',

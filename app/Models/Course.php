@@ -11,6 +11,14 @@ class Course extends Model
     /** @use HasFactory<\Database\Factories\CourseFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'is_deleted' => 'boolean',
+        'is_pending' => 'boolean',
+        'price' => 'decimal',
+        'lectures_number' => 'integer',
+        'teacher_id' => 'integer',
+        'subject_id' => 'integer',
+    ];
     protected $fillable = [
         'is_deleted',
         'is_pending',
