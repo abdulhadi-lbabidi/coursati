@@ -24,6 +24,7 @@ class SalesPointFactory extends Factory
             'description'=>fake()->text(),
             'lat'=>fake()->randomFloat(10,0,16),
             'lng'=>fake()->randomFloat(10,0,16),
+            'percentage'=>fake()->randomFloat(3,0,0.3),
             'image_url'=>fake()->imageUrl(),
             'university_id'=>University::all()->random()->id,
         ];

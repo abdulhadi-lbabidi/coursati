@@ -21,6 +21,7 @@ class SalesPoint extends Model
         'phone',
         'address',
         'description',
+        'percentage',
         'lat',
         'lng',
         'image_url',

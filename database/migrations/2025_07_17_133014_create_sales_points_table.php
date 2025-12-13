@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('address');
             $table->string('description')->nullable();
+            $table->float('percentage');
             $table->float('lat');
             $table->float('lng');
             $table->text('image_url')->nullable();

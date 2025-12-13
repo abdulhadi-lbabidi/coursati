@@ -10,6 +10,11 @@ class Year extends Model
     /** @use HasFactory<\Database\Factories\YearFactory> */
     use HasFactory;
 
+    protected $casts= [
+        'number'=>'integer',
+        'is_deleted'=>'boolean',
+        'university_id'=>'integer',
+    ];
     protected $fillable = [
         'number',
         'name',
