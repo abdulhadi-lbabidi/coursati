@@ -26,10 +26,7 @@ class Year extends Model
         return $this->belongsTo( University::class);
     }
 
-    public function seasons()
-    {
-        return $this->hasMany(Season::class)->where('is_deleted', '0');
-    }
+
     public function subjects()
     {
         return $this->hasMany(Subject::class)->where('is_deleted', '0');

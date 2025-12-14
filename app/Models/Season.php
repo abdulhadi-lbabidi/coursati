@@ -14,7 +14,7 @@ class Season extends Model
         'university_id' => 'integer',
         'is_deleted' => 'boolean',
     ];
-        protected $fillable = [
+    protected $fillable = [
         'name',
         'number',
         'university_id',
@@ -25,6 +25,9 @@ class Season extends Model
     {
         return $this->belongsTo( University::class)->where('is_deleted', '0');
     }
-
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class)->where('is_deleted', '0');
+    }
 
 }

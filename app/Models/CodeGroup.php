@@ -12,8 +12,8 @@ class CodeGroup extends Model
 
     protected $casts = [
         'course_id'=>'integer',
-        'price'=>'decimal',
-        'persentage'=>'decimal',
+        'price'=>'integer',
+        'persentage'=>'float',
     ];
     protected $fillable = [
         'course_id',

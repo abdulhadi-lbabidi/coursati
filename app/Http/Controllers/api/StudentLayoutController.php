@@ -100,8 +100,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($university) {
                     $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                })
+                ->whereHas('season', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
                 });
-        })->with(['subject.year', 'teacher'])->withAvg('rates', 'stars')->limit(5)
+        })->with(['subject.year','subject.season', 'teacher'])->withAvg('rates', 'stars')->limit(5)
         ->get();
 
 
@@ -113,8 +116,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($university) {
                     $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                })
+                ->whereHas('season', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
                 });
-        })->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->inRandomOrder()->limit(5)
+        })->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])->inRandomOrder()->limit(5)
         ->get();
 
 
@@ -126,8 +132,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($university) {
                     $query->where('is_deleted', 0)->orWhere('university_id','=',$university->id);
+                })
+                ->whereHas('season', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
                 });
-        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])->limit(5)
+        })->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])->limit(5)
         ->get();
 
         return response()->json([ 'free_courses' => $freecourses, 'sales_points' => $salespoint, 'recently_added_courses' => $recentcourses, 'most_visited_courses' => $mostvisited]);
@@ -147,8 +156,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($university) {
                     $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                })
+                ->whereHas('season', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
                 });
-        })->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        })->where('price','=',0)->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])
         ->get();
         return response()->json([ 'free_courses' => $freecourses]);
     }
@@ -179,8 +191,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($university) {
                     $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                })
+                ->whereHas('season', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
                 });
-        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        })->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])
         ->get();
         return response()->json(['courses' => $courses,'season'=>$university->seasons]);
     }
@@ -194,7 +209,10 @@ class StudentLayoutController extends Controller
         $university = University::findOrFail($valdata['university_id']);
         $results = Subject::whereHas('year', function ($query) use ($university) {
             $query->where('university_id', $university->id);
-        })->where('name', 'like', '%' . $valdata['name'] . '%')->where('is_deleted',0)->with('year')->get();
+
+        })->whereHas('season', function ($query) use ($university) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$university->id);
+                })->where('name', 'like', '%' . $valdata['name'] . '%')->where('is_deleted',0)->with('year','season')->get();
         return response()->json(['subjects' => $results]);
     }
 
@@ -207,7 +225,7 @@ class StudentLayoutController extends Controller
         $universityid = $student->year->university->id;
         $seasons = Season::where('university_id','=',$universityid)->get();
 
-        return response()->json(['year' => $student->subjects->load('year'),'seasons'=>$seasons]);
+        return response()->json(['subjects' => $student->subjects->load('year','season'),'seasons'=>$seasons]);
     }
 
     public function uniyears(Request $request)
@@ -240,7 +258,7 @@ class StudentLayoutController extends Controller
             'university_id' => 'required|integer',
         ]);
         $university = University::findOrFail($valdata['university_id']);
-        return response()->json(['year' => $university->years->load('subjects'),'seasons'=>$university->seasons]);
+        return response()->json(['year' => $university->years->load('subjects.season'),'seasons'=>$university->seasons]);
     }
 
     public function addstudentsubject(Request $request)
@@ -251,7 +269,7 @@ class StudentLayoutController extends Controller
         ]);
         $student = Student::findOrFail($valdata['student_id']);
         $student->subjects()->syncWithoutDetaching($valdata['subject_id']);
-        return response()->json(['year' => $student->subjects,'message' => 'تم إضافة المادة الى حساب الطالب']);
+        return response()->json(['subjects' => $student->subjects,'message' => 'تم إضافة المادة الى حساب الطالب']);
     }
     public function deletestudentsubject(Request $request)
     {
@@ -278,8 +296,10 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)->where('id','=',$valdata['subject_id'])
                 ->whereHas('year', function ($query)  {
                     $query->where('is_deleted', 0);
+                })->whereHas('season', function ($query) use ($valdata) {
+                    $query->where('is_deleted', 0);
                 });
-        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        })->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])
         ->get();
 
         return response()->json(['courses' => $courses]);
@@ -339,7 +359,7 @@ class StudentLayoutController extends Controller
         $expiredCourses = $student->courses()
         ->where('enddate', '<', Carbon::today())->where('is_deleted','0')
         ->get();
-        return response()->json(['activeCourses' => $activeCourses->load('teacher','rates'),'expiredCourses'=>$expiredCourses->load('teacher','rates')]);
+        return response()->json(['activeCourses' => $activeCourses->load('teacher','subject.year','subject.season','rates'),'expiredCourses'=>$expiredCourses->load('teacher','rates')]);
     }
 
     public function coursedetails(Request $request)
@@ -352,6 +372,17 @@ class StudentLayoutController extends Controller
         $student_id = $valdata['student_id'];
         $course_id = $valdata['course_id'];
         $course = Course::with([
+            'subject' => function ($query)  {
+                // Only favorites by this student
+                $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query)  {
+                    $query->where('is_deleted', 0);
+                })->whereHas('season', function ($query)  {
+                    $query->where('is_deleted', 0);
+                })->with('year',
+            'season',);
+            },
+
             'teacher.faivorit' => function ($query) use ($student_id) {
                 // Only favorites by this student
                 $query->where('student_id', $student_id);
@@ -534,8 +565,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($teacher) {
                     $query->where('is_deleted', 0)->where('university_id','=',$teacher->university_id);
+                })
+                ->whereHas('season', function ($query) use ($teacher) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$teacher->university_id);
                 });
-        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        })->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])
         ->get();
         return response()->json(['courses' => $courses]);
     }
@@ -552,8 +586,11 @@ class StudentLayoutController extends Controller
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($valdata) {
                     $query->where('is_deleted', 0)->where('year_id','=',$valdata['year_id']);
+                })
+                ->whereHas('season', function ($query) use ($valdata) {
+                    $query->where('is_deleted', 0);
                 });
-        })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
+        })->withAvg('rates', 'stars')->with(['subject.year','subject.season', 'teacher'])
         ->get();
         return response()->json(['courses' => $courses]);
     }

@@ -11,6 +11,7 @@ class CourseRate extends Model
     use HasFactory;
 
     protected $casts = [
+        'stars' => 'float',
         'course_id' => 'integer',
         'student_id' => 'integer',
     ];

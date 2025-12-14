@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Season;
 use App\Models\University;
 use App\Models\Year;
 use Illuminate\Database\Migrations\Migration;
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->enum('subject_nature',['writen','automation']);
             $table->boolean('is_deleted')->default(false);
             $table->foreignIdFor(Year::class);
+            $table->foreignIdFor(Season::class);
             $table->timestamps();
         });
 

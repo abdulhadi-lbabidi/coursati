@@ -14,7 +14,7 @@ class Course extends Model
     protected $casts = [
         'is_deleted' => 'boolean',
         'is_pending' => 'boolean',
-        'price' => 'decimal',
+        'price' => 'integer',
         'lectures_number' => 'integer',
         'teacher_id' => 'integer',
         'subject_id' => 'integer',

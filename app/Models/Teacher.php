@@ -13,7 +13,7 @@ class Teacher extends Model
 
     protected $casts = [
         'university_id' => 'integer',
-        'persentage' => 'decimal',
+        'persentage' => 'float',
 
     ];
     protected $fillable = [

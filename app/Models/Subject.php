@@ -12,6 +12,7 @@ class Subject extends Model
 
     protected $casts = [
         'year_id' => 'integer',
+        'season_id' => 'integer',
         'is_deleted' => 'boolean',
     ];
     protected $fillable = [
@@ -21,10 +22,15 @@ class Subject extends Model
         'subject_nature',
         'is_deleted',
         'year_id',
+        'season_id',
     ];
     public function year()
     {
         return $this->belongsTo( Year::class)->where('is_deleted', '0');
+    }
+    public function season()
+    {
+        return $this->belongsTo( Season::class)->where('is_deleted', '0');
     }
 
     public function courses()

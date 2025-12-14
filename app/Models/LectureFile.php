@@ -13,7 +13,7 @@ class LectureFile extends Model
     protected $casts = [
         'lecture_id' => 'integer',
         'number' => 'integer',
-        'size' => 'decimal',
+        'size' => 'float',
     ];
     protected $fillable = [
         'lecture_id',

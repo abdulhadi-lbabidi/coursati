@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('lectures_number');
             $table->float('total_videos_duration');
             $table->text('telegram_url');
-            $table->float('price');
+            $table->integer('price');
             $table->date('enddate');
             $table->foreignId('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
             $table->foreignId('subject_id')->references('id')->on('subjects')->onDelete('cascade');

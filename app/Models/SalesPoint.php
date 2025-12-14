@@ -13,8 +13,9 @@ class SalesPoint extends Model
     protected $casts = [
         'university_id' => 'integer',
         'is_deleted' => 'boolean',
-        'lng' => 'decimal',
-        'lat' => 'decimal',
+        'lng' => 'float',
+        'lat' => 'float',
+        'percentage' => 'float',
     ];
     protected $fillable = [
         'name',

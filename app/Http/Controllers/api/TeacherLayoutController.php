@@ -167,6 +167,9 @@ $courseIds = $teacher->courses()->pluck('id');
             $query->where('is_deleted', 0)
                 ->whereHas('year', function ($query) use ($valdata) {
                     $query->where('is_deleted', 0)->where('university_id','=',$valdata['university_id']);
+                })
+                ->whereHas('season', function ($query) use ($valdata) {
+                    $query->where('is_deleted', 0)->where('university_id','=',$valdata['university_id']);
                 });
         })->withAvg('rates', 'stars')->with(['subject.year', 'teacher'])
         ->get();
@@ -192,18 +195,39 @@ $courseIds = $teacher->courses()->pluck('id');
                 ->whereHas('teachers', function($q) use ($universityId) {
                     $q->where('university_id', $universityId);
                 })
+                ->whereHas('year', function($q) use ($universityId) {
+                    $q->where('university_id', $universityId)->where('is_deleted',0);
+                })
+                ->whereHas('season', function($q) use ($universityId) {
+                    $q->where('university_id', $universityId)->where('is_deleted',0);
+                })
+                ->with('year','season')
                 ->get();
         }
 
-        $subjectsNoTeacher = Subject::where('year_id', $valdata['year_id'])
+        $subjectsNoTeacher = Subject::where('year_id', $valdata['year_id'])->where('is_deleted', 0)
+            ->whereHas('year', function($q) use ($universityId) {
+                $q->where('university_id', $universityId)->where('is_deleted',0);
+            })
+            ->whereHas('season', function($q) use ($universityId) {
+                $q->where('university_id', $universityId)->where('is_deleted',0);
+            })
             ->whereDoesntHave('teachers')
+            ->with('year','season')
             ->get();
         $teacherId = 5; // example teacher id
 
-        $subjectsNotTaken = Subject::where('year_id', $valdata['year_id'])
+        $subjectsNotTaken = Subject::where('year_id', $valdata['year_id'])->where('is_deleted', 0)
+                ->whereHas('year', function($q) use ($universityId) {
+                    $q->where('university_id', $universityId)->where('is_deleted',0);
+                })
+                ->whereHas('season', function($q) use ($universityId) {
+                    $q->where('university_id', $universityId)->where('is_deleted',0);
+                })
             ->whereDoesntHave('teachers', function($q) use ($valdata) {
                 $q->where('teachers.id', $valdata['teacher_id']);
             })
+            ->with('year','season')
             ->get();
 
         return response()->json([ 'subjectsTaught' => $subjectsTaught,'subjectsNoTeacher'=>$subjectsNoTeacher,'subjectsNotTaken'=>$subjectsNotTaken , 'seasons'=>$university->seasons]);
@@ -268,6 +292,7 @@ $courseIds = $teacher->courses()->pluck('id');
         // Eager load relationships for efficiency
         $courses = Course::with([
             'subject.year',
+            'subject.season',
             'rates',
             'lectures.videos',
             'teacher'  // optional, if you want to verify teacher's university
@@ -275,6 +300,15 @@ $courseIds = $teacher->courses()->pluck('id');
         ->where('teacher_id', $teacher_id)
         ->whereHas('teacher', function($query) use ($university_id) {
             $query->where('university_id', $university_id);
+        })
+        ->whereHas('subject', function ($query)  {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query)  {
+                    $query->where('is_deleted', 0);
+                })
+                ->whereHas('season', function ($query)  {
+                    $query->where('is_deleted', 0);
+                });
         })
         ->get();
 
@@ -785,7 +819,7 @@ public function addVideo(Request $request)
             'course_id' => 'required|exists:courses,id',
         ]);
 
-        $course = Course::with(['teacher', 'subject'])
+        $course = Course::with(['teacher', 'subject.year', 'subject.season'])
             ->find($request->input('course_id'));
 
         if (!$course) {

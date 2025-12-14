@@ -14,7 +14,7 @@ class StudentCourse extends Model
         'student_id' => 'integer',
         'course_id' => 'integer',
         'subscription_price' => 'integer',
-        'persentage' => 'decimal',
+        'persentage' => 'float',
     ];
 
     protected $fillable = [

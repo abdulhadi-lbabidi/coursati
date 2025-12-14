@@ -31,7 +31,7 @@ class CourseFactory extends Factory
             'free_course_image'=>fake()->url(),
             'lectures_number'=>fake()->numberBetween(1,10),
             'total_videos_duration'=>fake()->numberBetween(1,20),
-            'price'=>fake()->numberBetween(10,20),
+            'price'=>fake()->numberBetween(10000,100000),
             'enddate'=>$randomDate->format('Y-m-d'),
             'telegram_url'=>fake()->url(),
             'teacher_id'=>Teacher::all()->random()->id,
