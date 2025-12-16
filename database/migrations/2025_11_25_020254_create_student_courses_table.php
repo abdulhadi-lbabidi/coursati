@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->foreignId('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->integer('subscription_price');
+            $table->date('subscription_date');
             $table->float('persentage');
             $table->timestamps();
         });

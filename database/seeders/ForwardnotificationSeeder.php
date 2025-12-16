@@ -13,6 +13,6 @@ class ForwardnotificationSeeder extends Seeder
      */
     public function run(): void
     {
-        Forwardnotification::factory()->count(30)->create();
+        Forwardnotification::factory()->count(300)->create();
     }
 }

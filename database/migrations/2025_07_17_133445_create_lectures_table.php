@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignId('lecture_id')->references('id')->on('lectures')->onDelete('cascade');
             $table->string('name');
             $table->float('size');
+            $table->boolean('is_free');
             $table->integer('number');
             $table->text('file_url');
             $table->timestamps();

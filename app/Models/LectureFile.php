@@ -14,10 +14,12 @@ class LectureFile extends Model
         'lecture_id' => 'integer',
         'number' => 'integer',
         'size' => 'float',
+        'is_free' => 'boolean',
     ];
     protected $fillable = [
         'lecture_id',
         'name',
+        'is_free',
         'size',
         'number',
         'file_url',

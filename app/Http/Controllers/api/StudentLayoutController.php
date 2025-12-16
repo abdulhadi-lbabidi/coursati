@@ -258,7 +258,7 @@ class StudentLayoutController extends Controller
             'university_id' => 'required|integer',
         ]);
         $university = University::findOrFail($valdata['university_id']);
-        return response()->json(['year' => $university->years->load('subjects.season'),'seasons'=>$university->seasons]);
+        return response()->json(['year' => $university->years->load('subjects.season','subjects.year'),'seasons'=>$university->seasons]);
     }
 
     public function addstudentsubject(Request $request)
@@ -313,7 +313,7 @@ class StudentLayoutController extends Controller
         ]);
         $lecture = Lecture::findOrFail($valdata['lecture_id']);
 
-        return response()->json(['lecture' => $lecture->load('videos')]);
+        return response()->json(['lecture' => $lecture->load('videos','course')]);
     }
     public function getlecturefiles(Request $request)
     {
@@ -354,10 +354,10 @@ class StudentLayoutController extends Controller
         $student = Student::findOrFail($valdata['student_id']);
 
         $activeCourses = $student->courses()
-        ->where('enddate', '>', Carbon::today())->where('is_deleted','0')
+        ->where('enddate', '>', Carbon::today())->where('is_deleted','0')->withPivot('subscription_date')
         ->get();
         $expiredCourses = $student->courses()
-        ->where('enddate', '<', Carbon::today())->where('is_deleted','0')
+        ->where('enddate', '<', Carbon::today())->where('is_deleted','0')->withPivot('subscription_date')
         ->get();
         return response()->json(['activeCourses' => $activeCourses->load('teacher','subject.year','subject.season','rates'),'expiredCourses'=>$expiredCourses->load('teacher','rates')]);
     }
@@ -385,23 +385,24 @@ class StudentLayoutController extends Controller
 
             'teacher.faivorit' => function ($query) use ($student_id) {
                 // Only favorites by this student
-                $query->where('student_id', $student_id);
+                $query->where('student_id', $student_id)->count();
             },
             'rates' => function ($query) use ($student_id) {
                 // Optionally eager load only this student's rate or all rates
-                $query->where('student_id', $student_id);
+                $query->where('student_id', $student_id)->count();
             },
         ])->findOrFail($course_id);
 
         // Get the student's rate for this course (if any)
-        $studentRate = $course->rates->first();
+       $studentRate = $course->rates->first();
+        $studentcount = $course->rates->count();
 
         // Get the student's favorite for the teacher (if any)
-        $studentFavorite = $course->teacher->faivorit->first();
+        $studentFavorite = $course->teacher->faivorit->count();
 
         return response()->json([
             'course' => $course,
-            'student_rate' => $studentRate,
+            'student_rate' => $studentRate ,
             'student_favorite_teacher' => $studentFavorite,
         ]);
     }
@@ -460,7 +461,7 @@ class StudentLayoutController extends Controller
             'year_id'=> $valdata['year_id'],
             'is_banned'=> $valdata['is_banned'],
         ]);
-        return response()->json(['student' => $student,'message'=>'تم تغيير معلومات الطالب']);
+        return response()->json(['student' => $student->load('year.university'),'message'=>'تم تغيير معلومات الطالب']);
     }
     public function salespoints()
     {

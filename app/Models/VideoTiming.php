@@ -12,13 +12,10 @@ class VideoTiming extends Model
 
     protected $casts = [
         'video_id' => 'integer',
-        'minutes' => 'integer',
-        'secounds' => 'integer',
     ];
     protected $fillable = [
         'name',
-        'minutes',
-        'secounds',
+        'time',
         'video_id',
     ];
 

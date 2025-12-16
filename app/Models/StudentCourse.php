@@ -21,6 +21,7 @@ class StudentCourse extends Model
         'student_id',
         'course_id',
         'subscription_price',
+        'subscription_date',
         'persentage',
     ];
         public function student()

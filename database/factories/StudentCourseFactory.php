@@ -21,6 +21,7 @@ class StudentCourseFactory extends Factory
         return [
             'persentage'=>fake()->randomFloat(2,0.01,0.3),
             'subscription_price'=>fake()->numberBetween(10,20),
+            'subscription_date'=>fake()->date(),
             'student_id'=>Student::all()->random()->id,
             'course_id'=>Course::all()->random()->id,
         ];

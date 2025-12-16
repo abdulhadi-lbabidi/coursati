@@ -32,6 +32,6 @@ class Video extends Model
     }
     public function timing()
     {
-        return $this->hasOne(VideoTiming::class);
+        return $this->hasMany(VideoTiming::class);
     }
 }

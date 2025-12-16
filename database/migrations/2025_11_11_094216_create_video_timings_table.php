@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('video_timings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('video_id')->references('id')->on('videos')->onDelete('cascade');
-            $table->integer('minutes');
-            $table->integer('secounds');
+            $table->time('time');
             $table->string('name');
             $table->timestamps();
         });
