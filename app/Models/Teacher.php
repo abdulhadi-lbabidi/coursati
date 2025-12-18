@@ -34,7 +34,7 @@ class Teacher extends Model
 
     public function courses()
     {
-        return $this->hasMany(Course::class)->where('is_deleted',0)->where('is_pending',0);
+        return $this->hasMany(Course::class)->where('is_deleted',0);
     }
     public function subjects()
     {

@@ -53,6 +53,12 @@ class DatabaseSeeder extends Seeder
             StudentSubjectsSeeder::class,]);
         $this->call([
             ForwardnotificationSeeder::class,]);
+        $this->call([
+            SubjectTeachersSeeder::class,]);
+        $this->call([
+            CourseRateSeeder::class,]);
+        $this->call([
+            StudentFaivoritTeacherSeeder::class,]);
         Contactinfo::factory()->count(1)->create();
 
     }

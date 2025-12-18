@@ -185,7 +185,7 @@ class StudentLayoutController extends Controller
 
         $courses  = Course::where('is_deleted', 0)->where('is_pending', 0)->where( 'name', 'like', '%'.$valdata['name'].'%')
         ->whereHas('teacher', function ($query) {
-            $query->where('statue', 'active')->orWhere('statue', 'banned');
+            $query->whereIn('statue', ['active', 'banned']);
         })
         ->whereHas('subject', function ($query) use ($university) {
             $query->where('is_deleted', 0)
@@ -290,7 +290,7 @@ class StudentLayoutController extends Controller
         ]);
         $courses = Course::where('is_deleted', 0)->where('is_pending', 0)
         ->whereHas('teacher', function ($query) {
-            $query->where('statue', 'active')->orWhere('statue', 'banned');
+            $query->where('statue', 'active')->orWhere('statue', 'banned')->withCount('courses','faivorit');
         })
         ->whereHas('subject', function ($query) use ($valdata) {
             $query->where('is_deleted', 0)->where('id','=',$valdata['subject_id'])
@@ -362,50 +362,50 @@ class StudentLayoutController extends Controller
         return response()->json(['activeCourses' => $activeCourses->load('teacher','subject.year','subject.season','rates'),'expiredCourses'=>$expiredCourses->load('teacher','rates')]);
     }
 
-    public function coursedetails(Request $request)
-    {
+public function coursedetails(Request $request)
+{
+    $valdata = $request->validate([
+        'course_id' => 'required|integer',
+        'student_id' => 'required|integer',
+    ]);
+    $student_id = $valdata['student_id'];
+    $course_id = $valdata['course_id'];
 
-        $valdata = $request->validate([
-            'course_id' => 'required|integer',
-            'student_id' => 'required|integer',
-        ]);
-        $student_id = $valdata['student_id'];
-        $course_id = $valdata['course_id'];
-        $course = Course::with([
-            'subject' => function ($query)  {
-                // Only favorites by this student
-                $query->where('is_deleted', 0)
-                ->whereHas('year', function ($query)  {
+    // Eager load subject, teacher, and only the relevant rate and favorite
+    $course = Course::with([
+        'subject' => function ($query) {
+            $query->where('is_deleted', 0)
+                ->whereHas('year', function ($query) {
                     $query->where('is_deleted', 0);
-                })->whereHas('season', function ($query)  {
+                })
+                ->whereHas('season', function ($query) {
                     $query->where('is_deleted', 0);
-                })->with('year',
-            'season',);
-            },
+                })
+                ->with('year', 'season');
+        },
+        'teacher.faivorit' => function ($query) use ($student_id) {
+            $query->where('student_id', $student_id);
+        },
+        'rates' => function ($query) use ($student_id) {
+            $query->where('student_id', $student_id);
+        },
+    ])->findOrFail($course_id);
 
-            'teacher.faivorit' => function ($query) use ($student_id) {
-                // Only favorites by this student
-                $query->where('student_id', $student_id)->count();
-            },
-            'rates' => function ($query) use ($student_id) {
-                // Optionally eager load only this student's rate or all rates
-                $query->where('student_id', $student_id)->count();
-            },
-        ])->findOrFail($course_id);
+    // Boolean: has the student rated this course?
+    $studentHasRated = $course->rates->isNotEmpty();
+    $studentsum = $course->rates->average('stars');
 
-        // Get the student's rate for this course (if any)
-       $studentRate = $course->rates->first();
-        $studentcount = $course->rates->count();
+    // Boolean: has the student favorited this teacher?
+    $studentHasFavoritedTeacher = $course->teacher && $course->teacher->faivorit->isNotEmpty();
 
-        // Get the student's favorite for the teacher (if any)
-        $studentFavorite = $course->teacher->faivorit->count();
+    return response()->json([
+        'course' => $course,
+        'student_rate' => $studentHasRated,
+        'student_favorite_teacher' => $studentHasFavoritedTeacher,
+        'rating' => $studentsum,
+    ]);
+}
 
-        return response()->json([
-            'course' => $course,
-            'student_rate' => $studentRate ,
-            'student_favorite_teacher' => $studentFavorite,
-        ]);
-    }
     public function studentprofile(Request $request)
     {
 

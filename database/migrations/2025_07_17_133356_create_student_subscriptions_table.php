@@ -30,19 +30,6 @@ return new class extends Migration
             $table->foreignId('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->timestamps();
         });
-        // Schema::create('subscriptions', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('cource_id')->references('id')->on('courses')->onDelete('cascade');
-
-        //     $table->timestamps();
-        // });
-        // Schema::create('student_subscriptions', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
-        //     $table->foreignId('student_id')->references('id')->on('students')->onDelete('cascade');
-        //     $table->integer('subscription_price');
-        //     $table->timestamps();
-        // });
     }
 
     /**

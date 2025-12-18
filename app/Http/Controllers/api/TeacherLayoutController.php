@@ -116,11 +116,11 @@ $courseIds = $teacher->courses()->pluck('id');
     $activeCoursesCount = $teacher->courses()->where('is_deleted', 0)->where('is_pending', 0)->count();
 
     // 4. Sum all courses rates then * 100 / 5
-    $totalRates = $teacher->courses()->with('rates')->get()->pluck('rates')->flatten()->sum('stars');
+    $totalRates = $teacher->courses()->with('rates')->get()->pluck('rates')->flatten()->average('stars');
     $sumRatesPercent = $totalRates * 100 / 5;
 
     // 5. Courses for the teacher where is_deleted = 0 and is_pending = 1
-    $pendingCourses = $teacher->courses()->where('is_deleted', 0)->where('is_pending', 1)->get();
+    $pendingCourses = $teacher->courses()->where('is_deleted', 0)->where('is_pending',1)->get();
 
     // 6. Courses for the teacher, latest created_at, limit 5
     $latestCourses = $teacher->courses()->orderByDesc('created_at')->limit(5)->get();
@@ -205,32 +205,32 @@ $courseIds = $teacher->courses()->pluck('id');
                 ->get();
         }
 
-        $subjectsNoTeacher = Subject::where('year_id', $valdata['year_id'])->where('is_deleted', 0)
-            ->whereHas('year', function($q) use ($universityId) {
-                $q->where('university_id', $universityId)->where('is_deleted',0);
-            })
-            ->whereHas('season', function($q) use ($universityId) {
-                $q->where('university_id', $universityId)->where('is_deleted',0);
-            })
-            ->whereDoesntHave('teachers')
-            ->with('year','season')
-            ->get();
-        $teacherId = 5; // example teacher id
+        // $subjectsNoTeacher = Subject::where('year_id', $valdata['year_id'])->where('is_deleted', 0)
+        //     ->whereHas('year', function($q) use ($universityId) {
+        //         $q->where('university_id', $universityId)->where('is_deleted',0);
+        //     })
+        //     ->whereHas('season', function($q) use ($universityId) {
+        //         $q->where('university_id', $universityId)->where('is_deleted',0);
+        //     })
+        //     ->whereDoesntHave('teachers')
+        //     ->with('year','season')
+        //     ->get();
+        //  // example teacher id
 
-        $subjectsNotTaken = Subject::where('year_id', $valdata['year_id'])->where('is_deleted', 0)
-                ->whereHas('year', function($q) use ($universityId) {
-                    $q->where('university_id', $universityId)->where('is_deleted',0);
-                })
-                ->whereHas('season', function($q) use ($universityId) {
-                    $q->where('university_id', $universityId)->where('is_deleted',0);
-                })
-            ->whereDoesntHave('teachers', function($q) use ($valdata) {
-                $q->where('teachers.id', $valdata['teacher_id']);
-            })
-            ->with('year','season')
-            ->get();
+        // $subjectsNotTaken = Subject::where('year_id', $valdata['year_id'])->where('is_deleted', 0)
+        //         ->whereHas('year', function($q) use ($universityId) {
+        //             $q->where('university_id', $universityId)->where('is_deleted',0);
+        //         })
+        //         ->whereHas('season', function($q) use ($universityId) {
+        //             $q->where('university_id', $universityId)->where('is_deleted',0);
+        //         })
+        //     ->whereDoesntHave('teachers', function($q) use ($valdata) {
+        //         $q->where('teachers.id', $valdata['teacher_id']);
+        //     })
+        //     ->with('year','season')
+        //     ->get();
 
-        return response()->json([ 'subjectsTaught' => $subjectsTaught,'subjectsNoTeacher'=>$subjectsNoTeacher,'subjectsNotTaken'=>$subjectsNotTaken , 'seasons'=>$university->seasons]);
+        return response()->json([ 'subjects' => $subjectsTaught, 'seasons'=>$university->seasons]);
     }
 
     public function createCourseIfAllowed(Request $request)
@@ -470,7 +470,7 @@ $courseIds = $teacher->courses()->pluck('id');
         $lecture = Lecture::find($request->input('lecture_id'));
 
         return response()->json([
-            'lecture' => $lecture,
+            'lecture' => $lecture->load('course'),
         ]);
     }
 

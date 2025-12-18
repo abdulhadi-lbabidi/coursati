@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student_faivorit_teachers', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_favorit')->default(false);
+            $table->boolean('is_favorit');
             $table->foreignId('student_id')->references('id')->on('students')->onDelete('cascade');;
             $table->foreignId('teacher_id')->references('id')->on('teachers')->onDelete('cascade');;
             $table->timestamps();

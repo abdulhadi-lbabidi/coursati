@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Subject;
+use App\Models\Teacher;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,14 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subject_teacher', function (Blueprint $table) {
+        Schema::create('subject_teachers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
-            $table->foreignId('teacher_id')->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Subject::class);
+            $table->foreignIdFor(Teacher::class);
             $table->timestamps();
-
-            $table->unique(['subject_id', 'teacher_id']); // prevent duplicate entries
+            // $table->unique(['subject_id', 'teacher_id']); // prevent duplicate entries
         });
+
+
     }
 
     /**
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subject_teacher');
+        Schema::dropIfExists('subject_teachers');
     }
 };

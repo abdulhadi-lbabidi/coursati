@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,9 @@ class StudentFaivoritTeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'student_id'=>Student::all()->random()->id,
+            'teacher_id'=>Teacher::all()->random()->id,
+            'is_favorit'=>fake()->boolean(70),
         ];
     }
 }
